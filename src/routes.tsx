@@ -1,67 +1,65 @@
 import { Icon } from '@chakra-ui/react';
 import {
-  MdBarChart,
-  MdPerson,
-  MdHome,
-  MdLock,
-  MdOutlineShoppingCart,
+  MdDashboard,             // Dashboard
+  MdPeople,                // User/Consumer Management
+  MdAccountCircle,         // Profile/User-related
+  MdSpeed,                 // Meter
+  MdPriceChange,           // Rate
+  MdRequestQuote,          // Billing
+  MdReceiptLong,           // Ledgers
+  MdAnalytics,             // Analytics
 } from 'react-icons/md';
 
-// Admin Imports
-// import MainDashboard from './pages/admin/default';
-// import NFTMarketplace from './pages/admin/nft-marketplace';
-// import Profile from './pages/admin/profile';
-// import DataTables from './pages/admin/data-tables';
-// import RTL from './pages/rtl/rtl-default';
-
-// Auth Imports
-// import SignInCentered from './pages/auth/sign-in';
 import { IRoute } from 'types/navigation';
 
 const routes: IRoute[] = [
   {
-    name: 'Main Dashboard',
+    name: 'Dashboard',
     layout: '/admin',
     path: '/default',
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'NFT Marketplace',
+    name: 'User Management',
     layout: '/admin',
-    path: '/nft-marketplace',
-    icon: (
-      <Icon
-        as={MdOutlineShoppingCart}
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
-    secondary: true,
+    path: '/user-management',
+    icon: <Icon as={MdPeople} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'Data Tables',
+    name: 'Consumer Management',
     layout: '/admin',
-    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables',
+    path: '/consumer-management',
+    icon: <Icon as={MdAccountCircle} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'Profile',
+    name: 'Rate Management',
     layout: '/admin',
-    path: '/profile',
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    path: '/rate-management',
+    icon: <Icon as={MdPriceChange} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'Sign In',
-    layout: '/auth',
-    path: '/sign-in',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    name: 'Meter Management',
+    layout: '/admin',
+    path: '/meter-management',
+    icon: <Icon as={MdSpeed} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'RTL Admin',
-    layout: '/rtl',
-    path: '/rtl-default',
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    name: 'Consumer Billing',
+    layout: '/admin',
+    path: '/consumer-billing',
+    icon: <Icon as={MdRequestQuote} width="20px" height="20px" color="inherit" />,
+  },
+  {
+    name: 'Ledgers',
+    layout: '/admin',
+    path: '/ledgers',
+    icon: <Icon as={MdReceiptLong} width="20px" height="20px" color="inherit" />,
+  },
+  {
+    name: 'Analytics',
+    layout: '/admin',
+    path: '/analytics',
+    icon: <Icon as={MdAnalytics} width="20px" height="20px" color="inherit" />,
   },
 ];
 
