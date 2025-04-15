@@ -19,14 +19,22 @@ import DefaultAuthLayout from 'layouts/auth/Default';
 import Link from 'next/link';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
+  const router = useRouter();
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorSecondary = 'gray.400';
   const textColorBrand = useColorModeValue('brand.500', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
+  const handleSignIn = () => {
+    // Placeholder for validation or authentication logic
+    router.push('/admin/default');
+  };
+
   return (
     <DefaultAuthLayout illustrationBackground={'/img/auth/auth.jpg'}>
       <Flex
@@ -40,7 +48,14 @@ export default function SignIn() {
         flexDirection="column"
       >
         <Box textAlign="center" mb="20px">
-          <Image src="/img/auth/logo.png" alt="Logo" mb="20px" width="120px" height="auto" mx="auto" />
+          <Image
+            src="/img/auth/logo.png"
+            alt="Logo"
+            mb="20px"
+            width="120px"
+            height="auto"
+            mx="auto"
+          />
           <Heading color={textColor} fontSize="36px" mb="10px" textAlign="center">
             ADMINISTRATOR LOGIN
           </Heading>
@@ -124,6 +139,7 @@ export default function SignIn() {
             w="100%"
             h="50"
             mb="24px"
+            onClick={handleSignIn}
           >
             Sign In
           </Button>
@@ -134,8 +150,7 @@ export default function SignIn() {
           alignItems="start"
           maxW="100%"
           mt="0px"
-        >
-        </Flex>
+        ></Flex>
       </Flex>
     </DefaultAuthLayout>
   );
