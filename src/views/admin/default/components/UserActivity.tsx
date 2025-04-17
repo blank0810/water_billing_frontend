@@ -5,8 +5,6 @@ import Card from 'components/card/Card'
 // Custom components
 import BarChart from 'components/charts/BarChart'
 import {
-  barChartDataUserActivity,
-  barChartOptionsUserActivity
 } from 'variables/charts'
 
 export default function UserActivity (props: { [x: string]: any }) {
@@ -42,8 +40,6 @@ export default function UserActivity (props: { [x: string]: any }) {
 
       <Box h='240px' mt='auto'>
         <BarChart
-          chartData={barChartDataUserActivity}
-          chartOptions={(barChartOptionsUserActivity as unknown) as ApexOptions}
         />
       </Box>
     </Card>
