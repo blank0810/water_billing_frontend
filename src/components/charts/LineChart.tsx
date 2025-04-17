@@ -1,12 +1,15 @@
-'use client';
 import dynamic from 'next/dynamic';
-// import Chart from 'react-apexcharts';
-const Chart = dynamic(() => import('react-apexcharts'), {
-  ssr: false,
-});
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const LineChart = (props: any) => {
   const { chartData, chartOptions } = props;
+
+  // Add a check to ensure chartData and chartOptions are not undefined
+  if (!chartData || !chartOptions) {
+    console.error('Missing chartData or chartOptions');
+    return <div>Loading...</div>;
+  }
 
   return (
     <Chart
