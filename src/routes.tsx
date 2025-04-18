@@ -1,13 +1,13 @@
 import { Icon } from '@chakra-ui/react';
 import {
-  MdDashboard,             // Dashboard
-  MdPeople,                // User/Consumer Management
-  MdAccountCircle,         // Profile/User-related
-  MdSpeed,                 // Meter
-  MdPriceChange,           // Rate
-  MdRequestQuote,          // Billing
-  MdReceiptLong,           // Ledgers
-  MdAnalytics,             // Analytics
+  MdDashboard,
+  MdPeople,
+  MdAccountCircle,
+  MdSpeed,
+  MdPriceChange,
+  MdRequestQuote,
+  MdReceiptLong,
+  MdAnalytics,
 } from 'react-icons/md';
 
 import { IRoute } from 'types/navigation';

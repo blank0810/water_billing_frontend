@@ -3,7 +3,6 @@
 import {
   Box,
   Flex,
-  FormLabel,
   Icon,
   SimpleGrid,
   Text,
@@ -29,92 +28,92 @@ export default function Default() {
   const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
 
   return (
-    <Box pt={{ base: '130px', md: '94px', xl: '94px' }}>
-      {/* TableTopCreators and MiniStatistics Side-by-Side */}
+    <Box pt={{ base: '130px', md: '94px', xl: '94px' }} px={{ base: 4, md: 6 }}>
+      {/* Side-by-side: TableTopCreators and MiniStatistics */}
       <Flex
         direction={{ base: 'column', xl: 'row' }}
         gap="20px"
         mb="20px"
-        align="flex-start"
+        align="stretch"
+        wrap="wrap"
       >
-        <Card flex="1" px="0px">
-          <TableTopCreators tableData={tableDataTopCreators} />
-        </Card>
+        {/* Left: Consumer Table */}
+        <Box flex="1" minW="300px">
+          <Card px="0px">
+            <TableTopCreators tableData={tableDataTopCreators} />
+          </Card>
+        </Box>
 
-        {/* Overall Overview Section with 4 MiniStatistics Cards */}
-        <Box flex="1">
+        {/* Right: Stats */}
+        <Box flex="1" minW="300px">
           <Text
-            color={useColorModeValue('secondaryGray.940', 'white')}
+            color={useColorModeValue('secondaryGray.950', 'white')}
             fontSize="3xl"
-            fontWeight="600"
-            mb="14px"
+            fontWeight="bold"
+            mb="20px"
           >
             Overall Overview
           </Text>
 
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing="20px">
-            {/* Total Consumers */}
             <MiniStatistics
               startContent={
                 <IconBox
-                  w="94px"
-                  h="94px"
+                  w="95px"
+                  h="95px"
                   bg={boxBg}
-                  icon={<Icon w="32px" h="32px" as={MdBarChart} color={brandColor} />}
+                  icon={<Icon w="28px" h="28px" as={MdBarChart} color={brandColor} />}
                 />
               }
               name="Total Consumers"
               value="3540"
             />
 
-            {/* Total Users */}
             <MiniStatistics
               startContent={
                 <IconBox
-                  w="94px"
-                  h="94px"
+                  w="95px"
+                  h="95px"
                   bg="linear-gradient(94deg, #4481EB 0%, #04BEFE 100%)"
-                  icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
+                  icon={<Icon w="24px" h="24px" as={MdAddTask} color="white" />}
                 />
               }
               name="Total Users"
               value="14"
             />
 
-            {/* Total Active */}
             <MiniStatistics
               startContent={
                 <IconBox
-                  w="94px"
-                  h="94px"
+                  w="95px"
+                  h="95px"
                   bg={boxBg}
-                  icon={<Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />}
+                  icon={<Icon w="28px" h="28px" as={MdFileCopy} color={brandColor} />}
                 />
               }
               name="Total Active"
               value="2935"
             />
 
-            {/* Overall Bill */}
             <MiniStatistics
               startContent={
                 <IconBox
-                  w="94px"
-                  h="94px"
+                  w="95px"
+                  h="95px"
                   bg={boxBg}
-                  icon={<Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />}
+                  icon={<Icon w="28px" h="28px" as={MdAttachMoney} color={brandColor} />}
                 />
               }
               name="Overall Bill"
-              value="121,642.39"
+              value="₱121,642.39"
             />
           </SimpleGrid>
         </Box>
       </Flex>
 
-      {/* Other Sections Below */}
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap="20px" mb="40px">
-      <BillingHistory />
+      {/* Bottom Grid Section */}
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing="20px" mb="40px">
+        <BillingHistory />
         <MonthlyConsumersPaid />
       </SimpleGrid>
     </Box>
