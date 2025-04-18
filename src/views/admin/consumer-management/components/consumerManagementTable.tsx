@@ -30,20 +30,20 @@ type RowObj = {
   id: string;
   profile: string;
   name: string;
-  username: string;
-  userType: 'admin' | 'user';
+  address: string;
+  contact: string;
   status: string;
   createdAt: string;
+  action: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function UserManagementTable(props: { tableData: RowObj[] }) {
+export default function ConsumerManagementTable(props: { tableData: any }) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-
   const columns = [
     columnHelper.accessor('id', {
       id: 'id',
@@ -53,39 +53,22 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
     columnHelper.accessor('profile', {
       id: 'profile',
       header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
-      cell: (info) => (
-        <Avatar name={info.getValue()} size="sm" />
-      )
+      cell: (info) => <Avatar name={info.getValue()} size="sm" />
     }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => <Text fontSize="sm" color="gray.400">NAME</Text>,
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
-      )
+      cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('username', {
-      id: 'username',
-      header: () => <Text fontSize="sm" color="gray.400">USERNAME</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">@{info.getValue()}</Text>
-    }),
-    columnHelper.accessor('createdAt', {
-      id: 'createdAt',
-      header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
+    columnHelper.accessor('address', {
+      id: 'address',
+      header: () => <Text fontSize="sm" color="gray.400">ADDRESS</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('userType', {
-      id: 'userType',
-      header: () => <Text fontSize="sm" color="gray.400">USER TYPE</Text>,
-      cell: (info) => (
-        <Text
-          color={info.getValue() === 'admin' ? 'blue.500' : 'gray.600'}
-          fontSize="sm"
-          fontWeight="600"
-        >
-          {info.getValue().toUpperCase()}
-        </Text>
-      )
+    columnHelper.accessor('contact', {
+      id: 'contact',
+      header: () => <Text fontSize="sm" color="gray.400">CONTACT</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
     columnHelper.accessor('status', {
       id: 'status',
@@ -93,8 +76,8 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
       cell: (info) => (
         <Flex align="center">
           <Icon
-            w="20px"
-            h="20px"
+            w="24px"
+            h="24px"
             me="5px"
             color={
               info.getValue() === 'Active' ? 'green.500' :
@@ -111,7 +94,12 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
         </Flex>
       )
     }),
-    columnHelper.display({
+    columnHelper.accessor('createdAt', {
+      id: 'createdAt',
+      header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+    }),
+    columnHelper.accessor('action', {
       id: 'action',
       header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
       cell: () => (
@@ -149,7 +137,9 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
         gap="20px"
         direction={{ base: 'column', md: 'row' }}
       >
-        <Text color={textColor} fontSize="20px" fontWeight="600">User Accounts</Text>
+        <Text color={textColor} fontSize="20px" fontWeight="600" lineHeight="100%">
+          Consumer Accounts
+        </Text>
 
         <Flex align="center" gap="12px" flexWrap="wrap">
           <Flex
@@ -163,7 +153,7 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
           >
             <input
               type="text"
-              placeholder="Search user..."
+              placeholder="Search consumer..."
               style={{
                 border: 'none',
                 outline: 'none',
@@ -175,11 +165,18 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
             <Icon as={MdSearch} w={5} h={5} color="blue.500" cursor="pointer" ml="8px" />
           </Flex>
 
-          <Button size="sm" variant="outline" borderRadius="md" _hover={{ bg: 'gray.200' }}>
+          <Button
+            size="sm"
+            variant="outline"
+            borderRadius="md"
+            _hover={{ bg: 'gray.200' }}
+            height="38px"
+            px="12px"
+          >
             <Icon as={MdSort} />
           </Button>
 
-            <Button
+          <Button
             size="sm"
             colorScheme="blue"
             height="38px"
@@ -232,6 +229,7 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
         </Table>
       </Box>
 
+      {/* Pagination (Right-aligned) */}
       <Flex justify="flex-end" px="25px" pb="20px">
         <Text fontSize="sm" color="gray.500">Page 1 of 5</Text>
       </Flex>
