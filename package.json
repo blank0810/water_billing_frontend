@@ -12,7 +12,7 @@
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@tanstack/react-table": "^8.9.8",
+    "@tanstack/react-table": "^8.21.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -31,6 +31,7 @@
     "react-icons": "^4.3.1",
     "react-is": "^18.0.0",
     "react-no-ssr": "^1.1.0",
+    "react-router-dom": "^7.5.1",
     "stylis": "^4.1.1",
     "stylis-plugin-rtl": "2.0.2",
     "typescript": "^4.9.4",
@@ -57,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/node": "^18.7.6",
+    "@types/node": "^18.19.86",
     "@types/react": "18.2.0",
     "@types/react-calendar": "^3.5.2",
     "@types/react-table": "^7.7.12",
