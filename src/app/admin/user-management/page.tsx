@@ -2,8 +2,8 @@
 import { Box } from '@chakra-ui/react';
 
 import React from 'react';
-import UserManagementTable from 'views/admin/user-management/components/userManagementTable';
-import userManagementData from 'views/admin/user-management/variables/userManagementData';
+import UserManagementTable from 'views/admin/user-management/userManagementTable';
+import userManagementData from 'views/data/user/userDummyData';
 
 
 export default function UserManagement() {

@@ -2,8 +2,8 @@
 import { Box } from '@chakra-ui/react';
 
 import React from 'react';
-import ConsumerManagementTable from 'views/admin/consumer-management/components/consumerManagementTable';
-import consumerManagementData from 'views/admin/consumer-management/variables/consumerManagementData';
+import ConsumerManagementTable from 'views/admin/consumer-management/consumerManagementTable';
+import { consumerAllData } from 'views/data/consumer/consumerDummyData';
 
 export default function ConsumerManagement() {
   return (
@@ -11,7 +11,7 @@ export default function ConsumerManagement() {
       pt={{ base: '150px', md: '100px', xl: '130px' }}
       px={{ base: 4, md: 6 }}
     >
-      <ConsumerManagementTable tableData={consumerManagementData} />
+      <ConsumerManagementTable tableData={consumerAllData} />
     </Box>
   );
 }

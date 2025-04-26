@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Box,
   Flex,
@@ -12,7 +13,7 @@ import {
   Tr,
   useColorModeValue,
   Button,
-  Avatar
+  Avatar,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -20,27 +21,30 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable
+  useReactTable,
 } from '@tanstack/react-table';
 import Card from 'components/card/Card';
-import { MdCancel, MdCheckCircle, MdOutlineError, MdEdit, MdDelete, MdSearch, MdSort, MdAdd } from 'react-icons/md';
+import {
+  MdCancel,
+  MdCheckCircle,
+  MdOutlineError,
+  MdSearch,
+  MdSort,
+  MdArrowForwardIos,
+  MdChevronLeft,
+  MdChevronRight,
+} from 'react-icons/md';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
-
-type RowObj = {
-  id: string;
-  profile: string;
-  name: string;
-  username: string;
-  userType: 'admin' | 'user';
-  status: string;
-  createdAt: string;
-};
+import { RowObj } from 'views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function UserManagementTable(props: { tableData: RowObj[] }) {
+export default function RateManagementTable(props: { tableData: RowObj[] }) {
   const { tableData } = props;
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
@@ -50,96 +54,79 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
       header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('profile', {
-      id: 'profile',
-      header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
-      cell: (info) => (
-        <Avatar name={info.getValue()} size="sm" />
-      )
-    }),
+   columnHelper.accessor('profile', {
+         id: 'profile',
+         header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
+         cell: (info) => <Avatar name={info.getValue()} size="sm" />
+       }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => <Text fontSize="sm" color="gray.400">NAME</Text>,
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
-      )
+      cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('username', {
-      id: 'username',
-      header: () => <Text fontSize="sm" color="gray.400">USERNAME</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">@{info.getValue()}</Text>
-    }),
-    columnHelper.accessor('createdAt', {
-      id: 'createdAt',
-      header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
+    columnHelper.accessor('address', {
+      id: 'address',
+      header: () => <Text fontSize="sm" color="gray.400">ADDRESS</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('userType', {
-      id: 'userType',
-      header: () => <Text fontSize="sm" color="gray.400">USER TYPE</Text>,
-      cell: (info) => (
-        <Text
-          color={info.getValue() === 'admin' ? 'blue.500' : 'gray.600'}
-          fontSize="sm"
-          fontWeight="600"
-        >
-          {info.getValue().toUpperCase()}
-        </Text>
-      )
+    columnHelper.accessor('contact', {
+      id: 'contact',
+      header: () => <Text fontSize="sm" color="gray.400">CONTACT</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
     columnHelper.accessor('status', {
       id: 'status',
       header: () => <Text fontSize="sm" color="gray.400">STATUS</Text>,
-      cell: (info) => (
-        <Flex align="center">
-          <Icon
-            w="20px"
-            h="20px"
-            me="5px"
-            color={
-              info.getValue() === 'Active' ? 'green.500' :
-              info.getValue() === 'Inactive' ? 'red.500' :
-              info.getValue() === 'Error' ? 'orange.500' : 'gray.500'
-            }
-            as={
-              info.getValue() === 'Active' ? MdCheckCircle :
-              info.getValue() === 'Inactive' ? MdCancel :
-              info.getValue() === 'Error' ? MdOutlineError : MdCancel
-            }
-          />
-          <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
-        </Flex>
-      )
+      cell: (info) => {
+        const value = info.getValue();
+        const color =
+          value === 'Paid' ? 'green.500' :
+          value === 'Unpaid' ? 'red.500' :
+          value === 'Pending' ? 'orange.500' : 'gray.500';
+
+        const icon =
+          value === 'Paid' ? MdCheckCircle :
+          value === 'Unpaid' ? MdCancel :
+          value === 'Pending' ? MdOutlineError : MdCancel;
+
+        const row = info.row.original;
+
+        return (
+          <Flex align="center" justify="space-between" cursor="pointer" onClick={() => router.push(`/admin/rate-management2${row.id}`)}>
+            <Flex align="center">
+              <Icon w="20px" h="20px" me="5px" color={color} as={icon} />
+              <Text color={textColor} fontSize="sm" fontWeight="700">{value}</Text>
+            </Flex>
+            <Icon as={MdArrowForwardIos} boxSize={4} color="gray.400" />
+          </Flex>
+        );
+      }
     }),
-    columnHelper.display({
-      id: 'action',
-      header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
-      cell: () => (
-        <Flex gap="10px">
-          <Box as="button">
-            <Icon as={MdEdit} w={5} h={5} color="blue.500" _hover={{ color: 'blue.700' }} />
-          </Box>
-          <Box as="button">
-            <Icon as={MdDelete} w={5} h={5} color="red.500" _hover={{ color: 'red.700' }} />
-          </Box>
-        </Flex>
-      )
-    })
   ];
 
-  const [data, setData] = React.useState(() => [...tableData]);
+  const filteredData = React.useMemo(
+    () =>
+      tableData.filter(
+        (row) =>
+          row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.contact.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery, tableData]
+  );
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
     <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
+      {/* Header and Search */}
       <Flex
         px="25px"
         py="20px"
@@ -149,7 +136,7 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
         gap="20px"
         direction={{ base: 'column', md: 'row' }}
       >
-        <Text color={textColor} fontSize="20px" fontWeight="600">User Accounts</Text>
+        <Text color={textColor} fontSize="20px" fontWeight="600">Current Rates</Text>
 
         <Flex align="center" gap="12px" flexWrap="wrap">
           <Flex
@@ -163,7 +150,9 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
           >
             <input
               type="text"
-              placeholder="Search user..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
               style={{
                 border: 'none',
                 outline: 'none',
@@ -179,17 +168,13 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
             <Icon as={MdSort} />
           </Button>
 
-            <Button
-            size="sm"
-            colorScheme="blue"
-            height="38px"
-            px="16px"
-          >
-            Add User
+          <Button size="sm" colorScheme="blue" height="38px" px="16px" onClick={() => router.push('/upload-user-rate')}>
+            Upload User Rate
           </Button>
         </Flex>
       </Flex>
 
+      {/* Table */}
       <Box maxW="100%" overflowX="auto" overflowY="auto" px="20px" pb="20px" style={{ maxHeight: '70vh' }}>
         <Table variant="simple" color="gray.500" minW="1000px">
           <Thead position="sticky" top={0} bg={useColorModeValue('gray.100', 'gray.700')} zIndex={1}>
@@ -206,6 +191,7 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
                   >
                     <Flex justifyContent="space-between" align="center" fontSize="sm" color="gray.400">
                       {flexRender(header.column.columnDef.header, header.getContext())}
+                      <Icon as={MdSort} boxSize={4} color="gray.400" />
                     </Flex>
                   </Th>
                 ))}
@@ -232,9 +218,29 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
         </Table>
       </Box>
 
-      <Flex justify="flex-end" px="25px" pb="20px">
-        <Text fontSize="sm" color="gray.500">Page 1 of 5</Text>
-      </Flex>
+      <Flex justify="space-between" align="center" px="25px" pb="20px">
+              <Text fontSize="sm" color="gray.500">
+                Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              </Text>
+              <Flex gap="4px">
+                <Button
+                  onClick={() => table.previousPage()}
+                  isDisabled={!table.getCanPreviousPage()}
+                  leftIcon={<MdChevronLeft />}
+                  size="sm"
+                >
+                  Prev
+                </Button>
+                <Button
+                  onClick={() => table.nextPage()}
+                  isDisabled={!table.getCanNextPage()}
+                  rightIcon={<MdChevronRight />}
+                  size="sm"
+                >
+                  Next
+                </Button>
+              </Flex>
+            </Flex>
     </Card>
   );
 }

@@ -13,6 +13,7 @@ import {
   Tr,
   useColorModeValue,
   Button,
+  Avatar
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -30,20 +31,14 @@ import {
   MdSearch,
   MdSort,
   MdArrowForwardIos,
+  MdChevronLeft,
+  MdChevronRight,
+  MdEdit,
+  MdDelete,
 } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-
-type RowObj = {
-  id: string;
-  name: string;
-  billMonth: string;
-  status: string;
-  rateName: string;
-  rateCharge: string;
-  rate: string;
-  vat: string;
-};
+import { RowObj } from 'views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
@@ -61,14 +56,24 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
       header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
+    columnHelper.accessor('profile', {
+      id: 'profile',
+      header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
+      cell: (info) => <Avatar name={info.getValue()} size="sm" />
+    }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => <Text fontSize="sm" color="gray.400">NAME</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('billMonth', {
-      id: 'billMonth',
-      header: () => <Text fontSize="sm" color="gray.400">BILL MONTH</Text>,
+    columnHelper.accessor('address', {
+      id: 'address',
+      header: () => <Text fontSize="sm" color="gray.400">ADDRESS</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+    }),
+    columnHelper.accessor('contact', {
+      id: 'contact',
+      header: () => <Text fontSize="sm" color="gray.400">CONTACT</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
     columnHelper.accessor('status', {
@@ -86,19 +91,35 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
           value === 'Unpaid' ? MdCancel :
           value === 'Pending' ? MdOutlineError : MdCancel;
 
-        const row = info.row.original;
-
         return (
-          <Flex align="center" justify="space-between" cursor="pointer" onClick={() => router.push(`/admin/rate-management2${row.id}`)}>
+          <Flex align="center" justify="space-between">
             <Flex align="center">
               <Icon w="20px" h="20px" me="5px" color={color} as={icon} />
               <Text color={textColor} fontSize="sm" fontWeight="700">{value}</Text>
             </Flex>
-            <Icon as={MdArrowForwardIos} boxSize={4} color="gray.400" />
           </Flex>
         );
       }
     }),
+    columnHelper.accessor('createdAt', {
+      id: 'createdAt',
+      header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+    }),
+    columnHelper.display({
+         id: 'action',
+         header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
+         cell: () => (
+           <Flex gap="10px">
+             <Box as="button">
+               <Icon as={MdEdit} w={5} h={5} color="blue.500" _hover={{ color: 'blue.700' }} />
+             </Box>
+             <Box as="button">
+               <Icon as={MdDelete} w={5} h={5} color="red.500" _hover={{ color: 'red.700' }} />
+             </Box>
+           </Flex>
+         )
+       })
   ];
 
   const filteredData = React.useMemo(
@@ -106,7 +127,8 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
       tableData.filter(
         (row) =>
           row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.billMonth.toLowerCase().includes(searchQuery.toLowerCase())
+          row.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.contact.toLowerCase().includes(searchQuery.toLowerCase())
       ),
     [searchQuery, tableData]
   );
@@ -132,7 +154,7 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
         gap="20px"
         direction={{ base: 'column', md: 'row' }}
       >
-        <Text color={textColor} fontSize="20px" fontWeight="600">Current Rates</Text>
+        <Text color={textColor} fontSize="20px" fontWeight="600">Consumers</Text>
 
         <Flex align="center" gap="12px" flexWrap="wrap">
           <Flex
@@ -165,7 +187,7 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
           </Button>
 
           <Button size="sm" colorScheme="blue" height="38px" px="16px" onClick={() => router.push('/upload-user-rate')}>
-            Upload User Rate
+            Upload User Data
           </Button>
         </Flex>
       </Flex>
@@ -214,8 +236,28 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
         </Table>
       </Box>
 
-      <Flex justify="flex-end" px="25px" pb="20px">
-        <Text fontSize="sm" color="gray.500">Page 1 of 5</Text>
+      <Flex justify="space-between" align="center" px="25px" pb="20px">
+        <Text fontSize="sm" color="gray.500">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </Text>
+        <Flex gap="4px">
+          <Button
+            onClick={() => table.previousPage()}
+            isDisabled={!table.getCanPreviousPage()}
+            leftIcon={<MdChevronLeft />}
+            size="sm"
+          >
+            Prev
+          </Button>
+          <Button
+            onClick={() => table.nextPage()}
+            isDisabled={!table.getCanNextPage()}
+            rightIcon={<MdChevronRight />}
+            size="sm"
+          >
+            Next
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );

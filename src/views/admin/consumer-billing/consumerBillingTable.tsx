@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Box,
   Flex,
@@ -11,8 +12,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-  Button,
-  Avatar
+  Button
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -20,86 +20,70 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable
+  useReactTable,
+  getPaginationRowModel
 } from '@tanstack/react-table';
 import Card from 'components/card/Card';
-import { MdCancel, MdCheckCircle, MdOutlineError, MdEdit, MdDelete, MdSearch, MdSort, MdAdd } from 'react-icons/md';
+import {
+  MdDelete,
+  MdEdit,
+  MdSearch,
+  MdSort,
+  MdChevronLeft,
+  MdChevronRight
+} from 'react-icons/md';
 import * as React from 'react';
-
-type RowObj = {
-  id: string;
-  profile: string;
-  name: string;
-  address: string;
-  contact: string;
-  status: string;
-  createdAt: string;
-  action: string;
-};
+import { RowObj } from 'views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function ConsumerManagementTable(props: { tableData: any }) {
-  const { tableData } = props;
+export default function ConsumerBillingTable({ tableData }: { tableData: RowObj[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+  
+  // Filtered data based on search query
+  const filteredData = React.useMemo(() => {
+    return tableData.filter(row =>
+      Object.values(row).some(value =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, tableData]);
+
   const columns = [
     columnHelper.accessor('id', {
       id: 'id',
       header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('profile', {
-      id: 'profile',
-      header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
-      cell: (info) => <Avatar name={info.getValue()} size="sm" />
-    }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => <Text fontSize="sm" color="gray.400">NAME</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('address', {
-      id: 'address',
-      header: () => <Text fontSize="sm" color="gray.400">ADDRESS</Text>,
+    columnHelper.accessor('accountNo', {
+      id: 'accountNo',
+      header: () => <Text fontSize="sm" color="gray.400">ACCOUNT NO</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('contact', {
-      id: 'contact',
-      header: () => <Text fontSize="sm" color="gray.400">CONTACT</Text>,
+    columnHelper.accessor('meterNo', {
+      id: 'meterNo',
+      header: () => <Text fontSize="sm" color="gray.400">METER NO</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('status', {
-      id: 'status',
-      header: () => <Text fontSize="sm" color="gray.400">STATUS</Text>,
-      cell: (info) => (
-        <Flex align="center">
-          <Icon
-            w="24px"
-            h="24px"
-            me="5px"
-            color={
-              info.getValue() === 'Active' ? 'green.500' :
-              info.getValue() === 'Inactive' ? 'red.500' :
-              info.getValue() === 'Error' ? 'orange.500' : 'gray.500'
-            }
-            as={
-              info.getValue() === 'Active' ? MdCheckCircle :
-              info.getValue() === 'Inactive' ? MdCancel :
-              info.getValue() === 'Error' ? MdOutlineError : MdCancel
-            }
-          />
-          <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
-        </Flex>
-      )
-    }),
-    columnHelper.accessor('createdAt', {
-      id: 'createdAt',
-      header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
+    columnHelper.accessor('presentReading', {
+      id: 'presentReading',
+      header: () => <Text fontSize="sm" color="gray.400">PRESENT READING</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('action', {
+    columnHelper.accessor('date', {
+      id: 'date',
+      header: () => <Text fontSize="sm" color="gray.400">DATE</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+    }),
+    columnHelper.display({
       id: 'action',
       header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
       cell: () => (
@@ -115,16 +99,20 @@ export default function ConsumerManagementTable(props: { tableData: any }) {
     })
   ];
 
-  const [data, setData] = React.useState(() => [...tableData]);
-
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    pageCount: Math.ceil(filteredData.length / 10),
   });
+
+  React.useEffect(() => {
+    table.setPageSize(10);
+  }, [table]);
 
   return (
     <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
@@ -133,13 +121,9 @@ export default function ConsumerManagementTable(props: { tableData: any }) {
         py="20px"
         justifyContent="space-between"
         align="center"
-        flexWrap="wrap"
-        gap="20px"
         direction={{ base: 'column', md: 'row' }}
       >
-        <Text color={textColor} fontSize="20px" fontWeight="600" lineHeight="100%">
-          Consumer Accounts
-        </Text>
+        <Text color={textColor} fontSize="20px" fontWeight="600">Consumer</Text>
 
         <Flex align="center" gap="12px" flexWrap="wrap">
           <Flex
@@ -153,7 +137,9 @@ export default function ConsumerManagementTable(props: { tableData: any }) {
           >
             <input
               type="text"
-              placeholder="Search consumer..."
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 border: 'none',
                 outline: 'none',
@@ -165,24 +151,12 @@ export default function ConsumerManagementTable(props: { tableData: any }) {
             <Icon as={MdSearch} w={5} h={5} color="blue.500" cursor="pointer" ml="8px" />
           </Flex>
 
-          <Button
-            size="sm"
-            variant="outline"
-            borderRadius="md"
-            _hover={{ bg: 'gray.200' }}
-            height="38px"
-            px="12px"
-          >
+          <Button size="sm" variant="outline" borderRadius="md" _hover={{ bg: 'gray.200' }}>
             <Icon as={MdSort} />
           </Button>
 
-          <Button
-            size="sm"
-            colorScheme="blue"
-            height="38px"
-            px="16px"
-          >
-            Add Consumer
+          <Button size="sm" colorScheme="blue" height="38px" px="16px">
+            Add Entry
           </Button>
         </Flex>
       </Flex>
@@ -229,9 +203,28 @@ export default function ConsumerManagementTable(props: { tableData: any }) {
         </Table>
       </Box>
 
-      {/* Pagination (Right-aligned) */}
-      <Flex justify="flex-end" px="25px" pb="20px">
-        <Text fontSize="sm" color="gray.500">Page 1 of 5</Text>
+      <Flex justify="space-between" align="center" px="25px" pb="20px">
+        <Text fontSize="sm" color="gray.500">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </Text>
+        <Flex gap="4px">
+          <Button
+            onClick={() => table.previousPage()}
+            isDisabled={!table.getCanPreviousPage()}
+            leftIcon={<MdChevronLeft />}
+            size="sm"
+          >
+            Prev
+          </Button>
+          <Button
+            onClick={() => table.nextPage()}
+            isDisabled={!table.getCanNextPage()}
+            rightIcon={<MdChevronRight />}
+            size="sm"
+          >
+            Next
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );

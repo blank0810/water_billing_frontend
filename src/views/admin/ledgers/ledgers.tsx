@@ -12,7 +12,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-  Button
+  Button,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -20,28 +20,21 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable
+  useReactTable,
 } from '@tanstack/react-table';
 import Card from 'components/card/Card';
-import { MdArrowBack, MdSearch, MdSort } from 'react-icons/md';
+import { MdArrowForwardIos, MdSearch, MdSort, MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-
-// Updated type for Rate Management Data
-type RowObj = {
-  id: string;
-  rateName: string;
-  rateCharge: string;
-  rate: string;
-  vat: string;
-};
+import { RowObj } from 'views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
-// Accept tableData as a prop
-export default function RateManagementTable2({ tableData }: { tableData: RowObj[] }) {
+export default function LedgerTable(props: { tableData: RowObj[] }) {
+  const { tableData } = props;
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
@@ -51,49 +44,65 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
       header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('rateName', {
-      id: 'rateName',
-      header: () => <Text fontSize="sm" color="gray.400">RATE NAME</Text>,
+    columnHelper.accessor('accountNo', {
+      id: 'accountNo',
+      header: () => <Text fontSize="sm" color="gray.400">ACCOUNT NO.</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('rateCharge', {
-      id: 'rateCharge',
-      header: () => <Text fontSize="sm" color="gray.400">RATE CHARGE</Text>,
+    columnHelper.accessor('meterNo', {
+      id: 'meterNo',
+      header: () => <Text fontSize="sm" color="gray.400">METER NO.</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('rate', {
-      id: 'rate',
-      header: () => <Text fontSize="sm" color="gray.400">RATE</Text>,
+    columnHelper.accessor('date', {
+      id: 'date',
+      header: () => <Text fontSize="sm" color="gray.400">DATE</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
     }),
-    columnHelper.accessor('vat', {
-      id: 'vat',
-      header: () => <Text fontSize="sm" color="gray.400">VAT</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+    columnHelper.display({
+      id: 'action',
+      header: () => <Text fontSize="sm" color="gray.400"> </Text>,
+      cell: (info) => (
+        <Flex justify="center">
+          <Icon as={MdArrowForwardIos} boxSize={4} color="gray.400" />
+        </Flex>
+      ),
     }),
   ];
 
-  const [data, setData] = React.useState(() => [...tableData]); // Use the imported data
+  const filteredData = React.useMemo(
+    () =>
+      tableData.filter(
+        (row) =>
+          row.accountNo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.meterNo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.date?.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery, tableData]
+  );
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
     <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
-      {/* Header with Back Button */}
-      <Flex px="25px" py="20px" justify="space-between" align="center">
-        <Flex align="center" gap="12px">
-          <Button onClick={() => router.push('/rate-management')} size="sm">
-            <Icon as={MdArrowBack} boxSize={5} />
-          </Button>
-          <Text color={textColor} fontSize="20px" fontWeight="600">User Rate Details</Text>
-        </Flex>
+      {/* Header and Search */}
+      <Flex
+        px="25px"
+        py="20px"
+        justifyContent="space-between"
+        align="center"
+        flexWrap="wrap"
+        gap="20px"
+        direction={{ base: 'column', md: 'row' }}
+      >
+        <Text color={textColor} fontSize="20px" fontWeight="600">Ledger</Text>
 
         <Flex align="center" gap="12px" flexWrap="wrap">
           <Flex
@@ -107,6 +116,8 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
           >
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search..."
               style={{
                 border: 'none',
@@ -127,7 +138,7 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
 
       {/* Table */}
       <Box maxW="100%" overflowX="auto" overflowY="auto" px="20px" pb="20px" style={{ maxHeight: '70vh' }}>
-        <Table variant="simple" color="gray.500" minW="1000px">
+        <Table variant="simple" color="gray.500" minW="800px">
           <Thead position="sticky" top={0} bg={useColorModeValue('gray.100', 'gray.700')} zIndex={1}>
             {table.getHeaderGroups().map(headerGroup => (
               <Tr key={headerGroup.id}>
@@ -142,6 +153,7 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
                   >
                     <Flex justifyContent="space-between" align="center" fontSize="sm" color="gray.400">
                       {flexRender(header.column.columnDef.header, header.getContext())}
+                      <Icon as={MdSort} boxSize={4} color="gray.400" />
                     </Flex>
                   </Th>
                 ))}
@@ -155,7 +167,7 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
                   <Td
                     key={cell.id}
                     fontSize="14px"
-                    minW="150px"
+                    minW="120px"
                     borderColor="gray.100"
                     whiteSpace="nowrap"
                   >
@@ -167,6 +179,30 @@ export default function RateManagementTable2({ tableData }: { tableData: RowObj[
           </Tbody>
         </Table>
       </Box>
+
+      <Flex justify="space-between" align="center" px="25px" pb="20px">
+        <Text fontSize="sm" color="gray.500">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </Text>
+        <Flex gap="4px">
+          <Button
+            onClick={() => table.previousPage()}
+            isDisabled={!table.getCanPreviousPage()}
+            leftIcon={<MdChevronLeft />}
+            size="sm"
+          >
+            Prev
+          </Button>
+          <Button
+            onClick={() => table.nextPage()}
+            isDisabled={!table.getCanNextPage()}
+            rightIcon={<MdChevronRight />}
+            size="sm"
+          >
+            Next
+          </Button>
+        </Flex>
+      </Flex>
     </Card>
   );
 }

@@ -2,13 +2,15 @@
 
 import { Box } from '@chakra-ui/react';
 import React from 'react';
-import RateManagementTable from 'views/admin/rate-management/components/rateManagementTable';
-import rateManagementData from 'views/admin/rate-management/variables/rateManagementData';
+import RateManagementTable from 'views/admin/rate-management/rateManagementTable';
+import { consumerAllData } from 'views/data/consumer/consumerDummyData';
 
 export default function RateManagement() {
   return (
     <Box pt={{ base: '150px', md: '100px', xl: '130px' }} px={{ base: 4, md: 6 }}>
-      <RateManagementTable tableData={rateManagementData} />
+      <RateManagementTable tableData={consumerAllData} />
     </Box>
   );
 }
+
+
