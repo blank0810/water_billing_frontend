@@ -12,74 +12,57 @@ import {
   MenuItem,
 } from '@chakra-ui/react'
 import Card from 'components/card/Card'
-// Custom components
-import BarChart from 'components/charts/BarChart'
+import LineChart from 'components/charts/LineChart'
 import React from 'react'
-import {
-  barChartDataBillingHistory,
-  barChartOptionsBillingHistory
-} from 'variables/billling'
-import { MdMoreHoriz } from 'react-icons/md'  // Three dots (More Options) icon
 
-export default function BillingHistory(props: { [x: string]: any }) {
+import { MdMoreHoriz } from 'react-icons/md'
+import { billingTrendChartData, billingTrendChartOptions } from 'variables/billling'
+
+export default function MonthlyBillTrend(props: { [x: string]: any }) {
   const { ...rest } = props
 
-  // Chakra Color Mode
   const textColor = useColorModeValue('secondaryGray.900', 'white')
   const iconColor = useColorModeValue('brand.500', 'white')
   const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100')
-  const bgHover = useColorModeValue(
-    { bg: 'secondaryGray.400' },
-    { bg: 'whiteAlpha.50' }
-  )
-  const bgFocus = useColorModeValue(
-    { bg: 'secondaryGray.300' },
-    { bg: 'whiteAlpha.100' }
-  )
+  const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' })
+  const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' })
 
   return (
-    <Card w='100%' {...rest}>
-      <Flex align='center' w='100%' px='15px' py='10px'>
-        <Text
-          me='auto'
-          color={textColor}
-          fontSize='xl'
-          fontWeight='700'
-          lineHeight='100%'
-        >
-          Billing History
+    <Card w="100%" {...rest}>
+      <Flex align="center" w="100%" px="15px" py="10px">
+        <Text me="auto" color={textColor} fontSize="xl" fontWeight="700">
+          Monthly Bill Trend
         </Text>
 
-        {/* Menu for More Options */}
         <Menu>
           <MenuButton
             as={Button}
-            alignItems='center'
-            justifyContent='center'
+            alignItems="center"
+            justifyContent="center"
             bg={bgButton}
             _hover={bgHover}
             _focus={bgFocus}
             _active={bgFocus}
-            w='50px'
-            h='37px'
-            lineHeight='100%'
-            borderRadius='10px'
+            w="50px"
+            h="37px"
+            lineHeight="100%"
+            borderRadius="10px"
             display="flex"
             {...rest}
           >
-            <Icon as={MdMoreHoriz} color={iconColor} w='24px' h='24px' />
+            <Icon as={MdMoreHoriz} color={iconColor} w="24px" h="24px" />
           </MenuButton>
           <MenuList>
-            <MenuItem>See Full Report</MenuItem>
-            <MenuItem>Download Report</MenuItem>
+            <MenuItem>Export Report</MenuItem>
+            <MenuItem>Filter by Year</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
 
-      <Box h='240px' mt='auto'>
-        <BarChart
-          chartData={barChartDataBillingHistory}
-          chartOptions={barChartOptionsBillingHistory}
+      <Box h="260px" mt="auto">
+        <LineChart
+          chartData={billingTrendChartData}
+          chartOptions={billingTrendChartOptions}
         />
       </Box>
     </Card>

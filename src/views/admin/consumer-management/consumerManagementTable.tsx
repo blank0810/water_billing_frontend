@@ -13,7 +13,7 @@ import {
   Tr,
   useColorModeValue,
   Button,
-  Avatar
+  Avatar,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -23,27 +23,28 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import Card from 'components/card/Card';
 import {
   MdCancel,
   MdCheckCircle,
   MdOutlineError,
   MdSearch,
   MdSort,
-  MdArrowForwardIos,
   MdChevronLeft,
   MdChevronRight,
   MdEdit,
   MdDelete,
+  MdAdd,
+  MdRemoveRedEye,
+  MdFileDownload,
 } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { RowObj } from 'views/data/consumer/consumerData';
+import Card from 'components/card/Card';
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function RateManagementTable(props: { tableData: RowObj[] }) {
-  const { tableData } = props;
+export default function ConsumerManagementTable({ tableData }: { tableData: RowObj[] }) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -52,84 +53,82 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
 
   const columns = [
     columnHelper.accessor('id', {
-      id: 'id',
       header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
+      cell: info => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>,
     }),
     columnHelper.accessor('profile', {
-      id: 'profile',
       header: () => <Text fontSize="sm" color="gray.400">PROFILE</Text>,
-      cell: (info) => <Avatar name={info.getValue()} size="sm" />
+      cell: info => <Avatar name={info.getValue()} size="sm" />,
     }),
     columnHelper.accessor('name', {
-      id: 'name',
       header: () => <Text fontSize="sm" color="gray.400">NAME</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>
+      cell: info => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>,
+    }),
+    columnHelper.accessor('meterNo', {
+      header: () => <Text fontSize="sm" color="gray.400">METER NO</Text>,
+      cell: info => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
     }),
     columnHelper.accessor('address', {
-      id: 'address',
       header: () => <Text fontSize="sm" color="gray.400">ADDRESS</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+      cell: info => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
     }),
     columnHelper.accessor('contact', {
-      id: 'contact',
       header: () => <Text fontSize="sm" color="gray.400">CONTACT</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+      cell: info => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
     }),
     columnHelper.accessor('status', {
-      id: 'status',
       header: () => <Text fontSize="sm" color="gray.400">STATUS</Text>,
-      cell: (info) => {
+      cell: info => {
         const value = info.getValue();
         const color =
           value === 'Paid' ? 'green.500' :
           value === 'Unpaid' ? 'red.500' :
           value === 'Pending' ? 'orange.500' : 'gray.500';
-
         const icon =
           value === 'Paid' ? MdCheckCircle :
           value === 'Unpaid' ? MdCancel :
           value === 'Pending' ? MdOutlineError : MdCancel;
 
         return (
-          <Flex align="center" justify="space-between">
-            <Flex align="center">
-              <Icon w="20px" h="20px" me="5px" color={color} as={icon} />
-              <Text color={textColor} fontSize="sm" fontWeight="700">{value}</Text>
-            </Flex>
+          <Flex align="center">
+            <Icon w="20px" h="20px" me="5px" color={color} as={icon} />
+            <Text color={textColor} fontSize="sm" fontWeight="700">{value}</Text>
           </Flex>
         );
-      }
+      },
     }),
     columnHelper.accessor('createdAt', {
-      id: 'createdAt',
       header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>
+      cell: info => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
     }),
     columnHelper.display({
-         id: 'action',
-         header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
-         cell: () => (
-           <Flex gap="10px">
-             <Box as="button">
-               <Icon as={MdEdit} w={5} h={5} color="blue.500" _hover={{ color: 'blue.700' }} />
-             </Box>
-             <Box as="button">
-               <Icon as={MdDelete} w={5} h={5} color="red.500" _hover={{ color: 'red.700' }} />
-             </Box>
-           </Flex>
-         )
-       })
+      id: 'action',
+      header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
+      cell: info => {
+        const row = info.row.original;
+        return (
+          <Flex gap="10px">
+            <Box as="button" onClick={() => router.push(`/admin/consumer-management/view/${row.id}`)}>
+              <Icon as={MdRemoveRedEye} w={5} h={5} color="blue.300" _hover={{ color: 'blue.600' }} />
+            </Box>
+            <Box as="button">
+              <Icon as={MdEdit} w={5} h={5} color="blue.500" _hover={{ color: 'blue.700' }} />
+            </Box>
+            <Box as="button">
+              <Icon as={MdDelete} w={5} h={5} color="red.500" _hover={{ color: 'red.700' }} />
+            </Box>
+          </Flex>
+        );
+      },
+    }),
   ];
 
-  const filteredData = React.useMemo(
-    () =>
-      tableData.filter(
-        (row) =>
-          row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.contact.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
+  const filteredData = React.useMemo(() =>
+    tableData.filter(row =>
+      row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.contact.toLowerCase().includes(searchQuery.toLowerCase())
+    ),
     [searchQuery, tableData]
   );
 
@@ -142,21 +141,35 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const handleExport = () => {
+    const csv = [
+      ['ID', 'Name', 'Meter No', 'Address', 'Contact', 'Status', 'Created At'],
+      ...filteredData.map(row => [
+        row.id,
+        row.name,
+        row.meterNo,
+        row.address,
+        row.contact,
+        row.status,
+        row.createdAt,
+      ]),
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'consumers.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
-      {/* Header and Search */}
-      <Flex
-        px="25px"
-        py="20px"
-        justifyContent="space-between"
-        align="center"
-        flexWrap="wrap"
-        gap="20px"
-        direction={{ base: 'column', md: 'row' }}
-      >
+      {/* Header */}
+      <Flex px="25px" py="20px" justifyContent="space-between" align="center" wrap="wrap" gap="20px">
         <Text color={textColor} fontSize="20px" fontWeight="600">Consumers</Text>
-
-        <Flex align="center" gap="12px" flexWrap="wrap">
+        <Flex align="center" gap="12px" wrap="wrap">
           <Flex
             align="center"
             borderRadius="md"
@@ -176,18 +189,24 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
                 outline: 'none',
                 background: 'transparent',
                 color: textColor,
-                width: '100%'
+                width: '100%',
               }}
             />
-            <Icon as={MdSearch} w={5} h={5} color="blue.500" cursor="pointer" ml="8px" />
+            <Icon as={MdSearch} w={5} h={5} color="blue.500" ml="8px" />
           </Flex>
 
-          <Button size="sm" variant="outline" borderRadius="md" _hover={{ bg: 'gray.200' }}>
-            <Icon as={MdSort} />
+          <Button onClick={handleExport} size="sm" variant="outline" borderRadius="md">
+            <Icon as={MdFileDownload} mr={2} />
           </Button>
 
-          <Button size="sm" colorScheme="blue" height="38px" px="16px" onClick={() => router.push('/upload-user-rate')}>
-            Upload User Data
+          <Button
+            size="sm"
+            colorScheme="blue"
+            px="16px"
+            onClick={() => router.push('/admin/consumer-management/add-consumer')}
+            leftIcon={<MdAdd />}
+          >
+            Add Consumer
           </Button>
         </Flex>
       </Flex>
@@ -195,38 +214,31 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
       {/* Table */}
       <Box maxW="100%" overflowX="auto" overflowY="auto" px="20px" pb="20px" style={{ maxHeight: '70vh' }}>
         <Table variant="simple" color="gray.500" minW="1000px">
-          <Thead position="sticky" top={0} bg={useColorModeValue('gray.100', 'gray.700')} zIndex={1}>
-            {table.getHeaderGroups().map(headerGroup => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <Th
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    pe="10px"
-                    borderColor={borderColor}
-                    cursor="pointer"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <Flex justifyContent="space-between" align="center" fontSize="sm" color="gray.400">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      <Icon as={MdSort} boxSize={4} color="gray.400" />
-                    </Flex>
-                  </Th>
-                ))}
-              </Tr>
-            ))}
-          </Thead>
+        <Thead position="sticky" top={0} bg={useColorModeValue('gray.100', 'gray.700')} zIndex={1}>
+  {table.getHeaderGroups().map(headerGroup => (
+    <Tr key={headerGroup.id}>
+      {headerGroup.headers.map(header => (
+        <Th
+          key={header.id}
+          borderColor={borderColor}
+          cursor="pointer"
+          onClick={header.column.getToggleSortingHandler()}
+        >
+          <Flex justify="space-between" align="center">
+            {flexRender(header.column.columnDef.header, header.getContext())}
+            {/* Removed the MdSort icon */}
+          </Flex>
+        </Th>
+      ))}
+    </Tr>
+  ))}
+</Thead>
+
           <Tbody>
             {table.getRowModel().rows.map(row => (
               <Tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
-                  <Td
-                    key={cell.id}
-                    fontSize="14px"
-                    minW="150px"
-                    borderColor="gray.100"
-                    whiteSpace="nowrap"
-                  >
+                  <Td key={cell.id} fontSize="14px" minW="150px" borderColor="gray.100" whiteSpace="nowrap">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Td>
                 ))}
@@ -241,20 +253,10 @@ export default function RateManagementTable(props: { tableData: RowObj[] }) {
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </Text>
         <Flex gap="4px">
-          <Button
-            onClick={() => table.previousPage()}
-            isDisabled={!table.getCanPreviousPage()}
-            leftIcon={<MdChevronLeft />}
-            size="sm"
-          >
+          <Button onClick={() => table.previousPage()} isDisabled={!table.getCanPreviousPage()} leftIcon={<MdChevronLeft />} size="sm">
             Prev
           </Button>
-          <Button
-            onClick={() => table.nextPage()}
-            isDisabled={!table.getCanNextPage()}
-            rightIcon={<MdChevronRight />}
-            size="sm"
-          >
+          <Button onClick={() => table.nextPage()} isDisabled={!table.getCanNextPage()} rightIcon={<MdChevronRight />} size="sm">
             Next
           </Button>
         </Flex>

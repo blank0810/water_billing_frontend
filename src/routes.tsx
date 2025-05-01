@@ -2,13 +2,17 @@ import { Icon } from '@chakra-ui/react';
 import {
   MdDashboard,
   MdPeople,
-  MdAccountCircle,
+  MdPersonAdd,
+  MdGroup,
+  MdPerson,
   MdSpeed,
   MdPriceChange,
   MdRequestQuote,
   MdReceiptLong,
   MdAnalytics,
 } from 'react-icons/md';
+import { FaUserPlus, FaUserCheck } from 'react-icons/fa';
+import { HiUserGroup } from 'react-icons/hi';
 
 import { IRoute } from 'types/navigation';
 
@@ -24,12 +28,40 @@ const routes: IRoute[] = [
     layout: '/admin',
     path: '/user-management',
     icon: <Icon as={MdPeople} width="20px" height="20px" color="inherit" />,
+    subRoutes: [
+      {
+        name: 'User List',
+        layout: '/admin',
+        path: '/user-management',
+        icon: <Icon as={HiUserGroup} width="20px" height="20px" color="inherit" />,
+      },
+      {
+        name: 'Add User',
+        layout: '/admin',
+        path: '/user-management/add-user',
+        icon: <Icon as={FaUserPlus} width="20px" height="20px" color="inherit" />,
+      },
+    ]
   },
   {
     name: 'Consumer Management',
     layout: '/admin',
     path: '/consumer-management',
-    icon: <Icon as={MdAccountCircle} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    subRoutes: [
+      {
+        name: 'Consumer List',
+        layout: '/admin',
+        path: '/consumer-management',
+        icon: <Icon as={MdGroup} width="20px" height="20px" color="inherit" />,
+      },
+      {
+        name: 'Add Consumer',
+        layout: '/admin',
+        path: '/consumer-management/add-consumer',
+        icon: <Icon as={FaUserCheck} width="20px" height="20px" color="inherit" />,
+      },
+    ]
   },
   {
     name: 'Rate Management',

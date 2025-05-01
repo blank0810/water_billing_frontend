@@ -110,3 +110,79 @@ export const barChartOptionsTotalConsumersPaid: ApexGeneric = {
     show: false,
   },
 };
+
+
+export const pieChartOptions = {
+  labels: ['Collected', 'Uncollected', 'Pending', 'Error'],
+  colors: ['#00308F', '#4169E1', '#87CEFA', '#FF0000'],
+  chart: {
+    width: '50px',
+    type: 'donut',
+  },
+  legend: {
+    show: false,
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  plotOptions: {
+    pie: {
+      expandOnClick: true,
+    },
+  },
+  fill: {
+    colors: ['#00308F', '#4169E1', '#87CEFA', '#FF0000'],
+  },
+  tooltip: {
+    enabled: true,
+    theme: 'dark',
+  },
+};
+
+export const pieChartData = [63, 25, 12, 1];
+
+
+// recent.ts
+// recent.ts
+export const recentActivities = [
+  {
+    id: 1,
+    date: 'April 20, 2025',
+    user: 'Enan',
+    action: 'Pay Bill',
+    status: 'Success',
+    meterNo: 'MN-001234',
+  },
+  {
+    id: 2,
+    date: 'April 19, 2025',
+    user: 'JanTan',
+    action: 'Checked Rate',
+    status: 'Success',
+    meterNo: 'MN-001235',
+  },
+  {
+    id: 3,
+    date: 'April 18, 2025',
+    user: 'Klent',
+    action: 'Payment',
+    status: 'Failure',
+    meterNo: 'MN-001236',
+  },
+  {
+    id: 4,
+    date: 'April 17, 2025',
+    user: 'Mayora',
+    action: 'Sign the contract',
+    status: 'Pending',
+    meterNo: 'MN-001237',
+  },
+  {
+    id: 5,
+    date: 'April 20, 2025',
+    user: 'Meedo',
+    action: 'Meeting',
+    status: 'Pending',
+    meterNo: 'MN-001237',
+  },
+];

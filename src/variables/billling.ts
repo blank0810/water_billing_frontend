@@ -2,96 +2,71 @@ import { ApexOptions } from 'apexcharts';
 
 type ApexGeneric = ApexOptions & any;
 
-export const barChartDataBillingHistory = [
+export const billingTrendChartData = [
   {
-    name: 'Total Billing Amount',
-    data: [10000, 10500, 18700, 11800, 14750, 10820, 17650, 10690, 15000, 10800, 18500, 19200], 
+    name: 'Billing Amount',
+    data: [10000, 10500, 18700, 11800, 14750, 10820, 17650, 10690, 15000, 10800, 18500, 19200],
   },
 ];
 
-export const barChartOptionsBillingHistory: ApexGeneric = {
+export const billingTrendChartOptions: ApexGeneric = {
   chart: {
-    stacked: false,
+    type: 'line',
     toolbar: {
       show: false,
     },
-    type: 'bar',
+    zoom: {
+      enabled: false,
+    },
   },
-  tooltip: {
-    style: {
-      fontSize: '12px',
-    },
-    onDatasetHover: {
-      style: {
-        fontSize: '12px',
-      },
-    },
-    theme: 'dark',
+  stroke: {
+    curve: 'smooth',
+    width: 3,
   },
   xaxis: {
-    categories: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'], 
+    categories: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
     labels: {
-      show: true,
       style: {
         colors: '#A3AED0',
-        fontSize: '14px',
-        fontWeight: '500',
+        fontSize: '13px',
       },
-    },
-    axisBorder: {
-      show: true,
-      color: '#D1D5DB',
-    },
-    axisTicks: {
-      show: true,
     },
   },
   yaxis: {
     title: {
-      text: 'Total Billing Amount ($)',
+      text: 'Amount ($)',
       style: {
         color: '#CBD5E0',
-        fontSize: '14px',
+        fontSize: '13px',
       },
     },
     labels: {
-      show: true,
       style: {
         colors: '#CBD5E0',
-        fontSize: '14px',
+        fontSize: '13px',
       },
+    },
+  },
+  tooltip: {
+    theme: 'dark',
+    x: {
+      format: 'MMM',
     },
   },
   grid: {
-    show: true,
-    borderColor: 'rgba(163, 174, 208, 0.3)',
-    xaxis: {
-      lines: {
-        show: true,
-        opacity: 0.1,
-      },
-    },
-    yaxis: {
-      lines: {
-        show: true,
-      },
-    },
+    borderColor: 'rgba(163, 174, 208, 0.2)',
   },
-  fill: {
-    type: 'solid',
-    colors: ['#3498db'], 
+  colors: ['#4FD1C5'],
+  markers: {
+    size: 5,
+    colors: ['#4FD1C5'],
+    strokeWidth: 2,
+    strokeColors: '#fff',
+    hover: {
+      size: 7,
+    },
   },
   dataLabels: {
     enabled: false,
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 8,
-      columnWidth: '20px',
-    },
-  },
-  colors: ['#3498db'],
-  legend: {
-    show: false,
   },
 };

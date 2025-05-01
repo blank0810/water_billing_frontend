@@ -1,129 +1,161 @@
-/* eslint-disable */
-
-// chakra imports
-import { Box, Flex, HStack, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  Box,
+  Collapse,
+  Flex,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { ChevronRightIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 import { IRoute } from 'types/navigation';
 import { usePathname } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 interface SidebarLinksProps {
   routes: IRoute[];
 }
 
-export function SidebarLinks(props: SidebarLinksProps) {
-  const { routes } = props;
-
-  //   Chakra color mode
+export function SidebarLinks({ routes }: SidebarLinksProps) {
   const pathname = usePathname();
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  let activeColor = useColorModeValue('gray.700', 'white');
-  let inactiveColor = useColorModeValue(
-    'secondaryGray.600',
-    'secondaryGray.600',
-  );
-  let activeIcon = useColorModeValue('brand.500', 'white');
-  let textColor = useColorModeValue('secondaryGray.500', 'white');
-  let brandColor = useColorModeValue('brand.500', 'brand.400');
+  const activeColor = useColorModeValue('gray.700', 'white');
+  const inactiveColor = useColorModeValue('secondaryGray.600', 'secondaryGray.600');
+  const activeIcon = useColorModeValue('brand.500', 'white');
+  const textColor = useColorModeValue('secondaryGray.500', 'white');
+  const activeBg = useColorModeValue('gray.200', 'gray.600');
 
-  // verifies if routeName is the one active (in browser input)
   const activeRoute = useCallback(
-    (routeName: string) => {
-      return pathname?.includes(routeName);
-    },
-    [pathname],
+    (routePath: string) => pathname?.toLowerCase() === routePath.toLowerCase(),
+    [pathname]
   );
 
-  // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
-  const createLinks = (routes: IRoute[]) => {
-    return routes.map((route, index: number) => {
-      if (
-        route.layout === '/admin' ||
-        route.layout === '/auth'
-      ) {
+  const renderLinks = () =>
+    routes.map((route, index) => {
+      const hasSubRoutes = route.subRoutes && route.subRoutes.length > 0;
+
+      if (hasSubRoutes) {
+        const isSubRouteActive = route.subRoutes.some((sr) =>
+          activeRoute(sr.layout + sr.path)
+        );
+        const isExpanded = expandedSection === route.name || isSubRouteActive;
+
+        const handleToggle = () => {
+          setExpandedSection(isExpanded ? null : route.name);
+        };
+
         return (
-          <Link key={index} href={route.layout + route.path}>
-            {route.icon ? (
-              <Box>
-                <HStack
-                  spacing={
-                    activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
-                  }
-                  py="5px"
-                  ps="10px"
-                >
-                  <Flex w="100%" alignItems="center" justifyContent="center">
-                    <Box
-                      color={
-                        activeRoute(route.path.toLowerCase())
-                          ? activeIcon
-                          : textColor
-                      }
-                      me="18px"
-                    >
-                      {route.icon}
-                    </Box>
-                    <Text
-                      me="auto"
-                      color={
-                        activeRoute(route.path.toLowerCase())
-                          ? activeColor
-                          : textColor
-                      }
-                      fontWeight={
-                        activeRoute(route.path.toLowerCase())
-                          ? 'bold'
-                          : 'normal'
-                      }
-                    >
-                      {route.name}
-                    </Text>
-                  </Flex>
-                  <Box
-                    h="36px"
-                    w="4px"
-                    bg={
-                      activeRoute(route.path.toLowerCase())
-                        ? brandColor
-                        : 'transparent'
-                    }
-                    borderRadius="5px"
-                  />
-                </HStack>
+          <Box key={index} mb="16px">
+            <Flex
+              align="center"
+              py="12px"
+              px="12px"
+              cursor="pointer"
+              _hover={{ bg: activeBg }}
+              bg={isSubRouteActive ? activeBg : 'transparent'}
+              borderRadius="8px"
+              onClick={handleToggle}
+            >
+              {route.icon && (
+                <Box color={isSubRouteActive ? activeIcon : textColor} me="12px">
+                  {route.icon}
+                </Box>
+              )}
+              <Text
+                color={isSubRouteActive ? activeColor : textColor}
+                fontWeight={isSubRouteActive ? 'bold' : 'medium'}
+                fontSize="lg"
+                lineHeight="1"
+                pt="1px"
+                flex="1"
+              >
+                {route.name}
+              </Text>
+              <ChevronRightIcon
+                boxSize="18px"
+                color={isSubRouteActive ? activeColor : textColor}
+                transform={isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'}
+                transition="transform 0.2s ease"
+              />
+            </Flex>
+
+            <Collapse in={isExpanded}>
+              <Box pl="36px" mt="8px">
+                {route.subRoutes.map((sub, subIndex) => {
+                  const fullPath = sub.layout + sub.path;
+                  const isSubActive = activeRoute(fullPath);
+
+                  return (
+                    <Link key={subIndex} href={fullPath}>
+                      <Flex
+                        align="center"
+                        py="6px"
+                        mt="6px"
+                        px="8px"
+                        bg={isSubActive ? activeBg : 'transparent'}
+                        borderRadius="6px"
+                        _hover={{ bg: activeBg }}
+                        cursor="pointer"
+                      >
+                        {sub.icon && (
+                          <Box color={isSubActive ? activeIcon : textColor} me="12px">
+                            {sub.icon}
+                          </Box>
+                        )}
+                        <Text
+                          color={isSubActive ? activeColor : inactiveColor}
+                          fontSize="md"
+                          lineHeight="1"
+                          pt="1px"
+                        >
+                          {sub.name}
+                        </Text>
+                      </Flex>
+                    </Link>
+                  );
+                })}
               </Box>
-            ) : (
-              <Box>
-                <HStack
-                  spacing={
-                    activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
-                  }
-                  py="5px"
-                  ps="10px"
-                >
-                  <Text
-                    me="auto"
-                    color={
-                      activeRoute(route.path.toLowerCase())
-                        ? activeColor
-                        : inactiveColor
-                    }
-                    fontWeight={
-                      activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'
-                    }
-                  >
-                    {route.name}
-                  </Text>
-                  <Box h="36px" w="4px" bg="brand.400" borderRadius="5px" />
-                </HStack>
-              </Box>
-            )}
-          </Link>
+            </Collapse>
+          </Box>
         );
       }
+
+      const fullPath = route.layout + route.path;
+      const isActive = activeRoute(fullPath);
+
+      return (
+        <Link key={index} href={fullPath}>
+          <Box
+            py="12px"
+            px="12px"
+            mb="12px"
+            _hover={{ bg: activeBg }}
+            bg={isActive ? activeBg : 'transparent'}
+            borderRadius="8px"
+            cursor="pointer"
+          >
+            <Flex align="center">
+              {route.icon && (
+                <Box color={isActive ? activeIcon : textColor} me="12px">
+                  {route.icon}
+                </Box>
+              )}
+              <Text
+                color={isActive ? activeColor : inactiveColor}
+                fontWeight={isActive ? 'bold' : 'medium'}
+                fontSize="lg"
+                lineHeight="1"
+                pt="1px"
+              >
+                {route.name}
+              </Text>
+            </Flex>
+          </Box>
+        </Link>
+      );
     });
-  };
-  //  BRAND
-  return <>{createLinks(routes)}</>;
+
+  return <Box position="relative">{renderLinks()}</Box>;
 }
 
 export default SidebarLinks;

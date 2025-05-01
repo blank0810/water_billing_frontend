@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Flex,
@@ -94,16 +95,21 @@ export default function TopAreaTable(props: { tableData: any }) {
       cell: (info) => {
         const activeValue = info.getValue();
         return (
-          <Text
-            color={activeValue > 0 ? 'green.500' : textColorSecondary}
-            fontSize="sm"
-            fontWeight="500"
+          <Badge
+            bg="green.50"
+            color="green.600"
+            fontSize="0.8em"
+            borderRadius="8px"
+            px="2"
+            py="1"
           >
             {activeValue}
-          </Text>
+          </Badge>
         );
       },
     }),
+    
+    
     columnHelper.accessor('totalInactive', {
       id: 'totalInactive',
       header: () => (
@@ -119,16 +125,20 @@ export default function TopAreaTable(props: { tableData: any }) {
       cell: (info) => {
         const inactiveValue = info.getValue();
         return (
-          <Text
-            color={inactiveValue > 0 ? 'red.500' : textColorSecondary}
-            fontSize="sm"
-            fontWeight="500"
+          <Badge
+            bg="red.50"
+            color="red.600"
+            fontSize="0.8em"
+            borderRadius="8px"
+            px="2"
+            py="1"
           >
             {inactiveValue}
-          </Text>
+          </Badge>
         );
       },
-    }),
+    }),    
+    
   ];
 
   const [data, setData] = React.useState(() => [...defaultData]);

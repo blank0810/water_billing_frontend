@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Box,
   Flex,
@@ -34,15 +35,20 @@ import {
   MdSort,
   MdAdd,
   MdChevronLeft,
-  MdChevronRight
+  MdChevronRight,
+  MdVisibility,
+  MdDownload
 } from 'react-icons/md';
 import * as React from 'react';
 import { RowObj } from 'views/data/user/userData';
+import { useRouter } from 'next/navigation';
 
 const columnHelper = createColumnHelper<RowObj>();
 
 export default function UserManagementTable(props: { tableData: RowObj[] }) {
   const { tableData } = props;
+  const router = useRouter();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [searchTerm, setSearchTerm] = React.useState('');
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -121,10 +127,13 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
     columnHelper.display({
       id: 'action',
       header: () => <Text fontSize="sm" color="gray.400">ACTION</Text>,
-      cell: () => (
+      cell: (info) => (
         <Flex gap="10px">
+          <Box as="button" onClick={() => router.push(`/admin/user-management/view/${info.row.original.id}`)}>
+            <Icon as={MdVisibility} w={5} h={5} color="blue.300" _hover={{ color: 'gray.800' }} />
+          </Box>
           <Box as="button">
-            <Icon as={MdEdit} w={5} h={5} color="blue.500" _hover={{ color: 'blue.700' }} />
+            <Icon as={MdEdit} w={5} h={5} color="blue.600" _hover={{ color: 'blue.700' }} />
           </Box>
           <Box as="button">
             <Icon as={MdDelete} w={5} h={5} color="red.500" _hover={{ color: 'red.700' }} />
@@ -148,6 +157,11 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
   React.useEffect(() => {
     table.setPageSize(10);
   }, [table]);
+
+  const handleExport = () => {
+    // TODO: Add CSV or Excel export logic here
+    alert('Export feature will be implemented soon.');
+  };
 
   return (
     <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
@@ -192,7 +206,24 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
             <Icon as={MdSort} />
           </Button>
 
-          <Button size="sm" colorScheme="blue" height="38px" px="16px">
+          <Button
+            size="sm"
+            variant="outline"
+            borderRadius="md"
+            _hover={{ bg: 'gray.200' }}
+            onClick={handleExport}
+          >
+            <Icon as={MdDownload} />
+          </Button>
+
+          <Button
+            size="sm"
+            colorScheme="blue"
+            height="38px"
+            px="16px"
+            onClick={() => router.push('/admin/user-management/add-user')}
+            leftIcon={<MdAdd />}
+          >
             Add User
           </Button>
         </Flex>

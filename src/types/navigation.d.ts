@@ -7,4 +7,5 @@ export interface IRoute {
   icon?: JSX.Element;
   component?: any;
   secondary?: boolean;
+  subRoutes?: IRoute[];  // New property for subroutes
 }

@@ -47,7 +47,7 @@ export default function MonthlyConsumersPaid(props: { [x: string]: any }) {
           fontWeight='700'
           lineHeight='100%'
         >
-          Consumers
+          Consumers Paid
         </Text>
 
         {/* Menu for More Options */}

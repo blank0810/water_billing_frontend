@@ -19,7 +19,7 @@ import {
 } from 'react-icons/md';
 import Card from 'components/card/Card';
 import MonthlyConsumersPaid from 'views/admin/default/components/ConsumerPaid';
-import TableTopCreators from 'views/admin/default/components/TableTopCreators';
+import TableTopCreators from 'views/admin/default/components/ConsumerDetails';
 import tableDataTopCreators from 'views/admin/default/variables/tableDataTopCreators';
 import BillingHistory from 'views/admin/default/components/BillingHistory';
 import LineChart from 'views/admin/analytics/components/LineChart';

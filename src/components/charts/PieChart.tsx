@@ -1,12 +1,13 @@
 'use client';
 import dynamic from 'next/dynamic';
-// import Chart from 'react-apexcharts';
+import React from 'react';
+
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
-const PieChart = (props: any) => {
-  const { chartData, chartOptions } = props;
+const PieChart = ({ chartData, chartOptions }: any) => {
+  if (!chartData || !chartOptions) return <div>Loading chart...</div>;
 
   return (
     <Chart
