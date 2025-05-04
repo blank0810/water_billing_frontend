@@ -13,13 +13,17 @@ export const consumerAllData: RowObj[] = [
     rateCharge: 'Php 500',
     rate: 'Php 12.50/cu.m',
     presentReading: '120',
+    previousReading: '140',
+    pulledOutReading: '2',
+    installedReading: '14',
     date: '2025-04-01',
     vat: '12%',
     address: 'Blk 1 Lot 3, Metro Subdivision',
     contact: '09171234567',
     billAmount: 500,
     consumption: 40,
-    createdAt: '2025-04-01'
+    createdAt: '2025-04-01',
+    consumerAllData: []
   },
   {
     id: '1002',
@@ -33,13 +37,17 @@ export const consumerAllData: RowObj[] = [
     rateCharge: 'Php 1000',
     rate: 'Php 20.00/cu.m',
     presentReading: '250',
+    previousReading: '130',
+    pulledOutReading: '2',
+    installedReading: '14',
     date: '2025-04-01',
     vat: '12%',
     address: 'Sunrise Blvd, Barangay Uno',
     contact: '09981234567',
     billAmount: 1000,
     consumption: 50,
-    createdAt: '2025-04-01'
+    createdAt: '2025-04-01',
+    consumerAllData: []
   },
   {
     id: '1003',
@@ -53,13 +61,17 @@ export const consumerAllData: RowObj[] = [
     rateCharge: 'Php 1500',
     rate: 'Php 25.00/cu.m',
     presentReading: '430',
+    previousReading: '340',
+    pulledOutReading: '2',
+    installedReading: '14',
     date: '2025-03-01',
     vat: '12%',
     address: 'Poblacion Center, Street 10',
     contact: '09221234567',
     billAmount: 1500,
     consumption: 60,
-    createdAt: '2025-03-01'
+    createdAt: '2025-03-01',
+    consumerAllData: []
   },
   {
     id: '1004',
@@ -73,13 +85,17 @@ export const consumerAllData: RowObj[] = [
     rateCharge: 'Php 600',
     rate: 'Php 15.00/cu.m',
     presentReading: '300',
+    previousReading: '240',
+    pulledOutReading: '2',
+    installedReading: '14',
     date: '2025-04-01',
     vat: '12%',
     address: 'Green Hills Village, Phase 2',
     contact: '09181231234',
     billAmount: 600,
     consumption: 40,
-    createdAt: '2025-04-01'
+    createdAt: '2025-04-01',
+    consumerAllData: []
   },
   {
     id: '1005',
@@ -93,12 +109,19 @@ export const consumerAllData: RowObj[] = [
     rateCharge: 'Php 1100',
     rate: 'Php 22.00/cu.m',
     presentReading: '480',
+    previousReading: '470',
+    pulledOutReading: '2',
+    installedReading: '14',
     date: '2025-04-01',
     vat: '12%',
     address: 'Barangay Hall Compound, Block B',
     contact: '09391231234',
     billAmount: 1100,
     consumption: 50,
-    createdAt: '2025-04-01'
+    createdAt: '2025-04-01',
+    consumerAllData: []
   }
 ];
+
+
+

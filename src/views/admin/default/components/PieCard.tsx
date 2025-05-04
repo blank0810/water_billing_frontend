@@ -37,6 +37,8 @@ export default function BillCollectionChart(props: { [x: string]: any }) {
 				px='20px'
 				mt='2px'
 				mx='auto'>
+
+					
 				{/* Collected */}
 				<Flex direction='column' py='5px'>
 					<Flex align='center'>

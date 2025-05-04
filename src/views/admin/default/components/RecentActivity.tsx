@@ -53,7 +53,7 @@ export default function RecentActivities() {
         </Thead>
         <Tbody>
           {recentActivities.map((activity) => {
-            const { bg, text } = getStatusColor(activity.status); // Destructure the background and text color for the status
+            const { bg, text } = getStatusColor(activity.status);
             return (
               <Tr key={activity.id} bg={rowColor} _hover={{ bg: 'gray.100' }} transition="background-color 0.3s ease">
                 <Td padding="16px">{activity.id}</Td>
@@ -70,7 +70,7 @@ export default function RecentActivities() {
                     py="4px"
                     borderRadius="md"
                     fontSize="sm"
-                    color={text} // Set the text color based on status
+                    color={text}
                   >
                     {activity.status}
                   </Badge>

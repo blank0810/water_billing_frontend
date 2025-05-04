@@ -1,4 +1,5 @@
 export type RowObj = {
+  consumerAllData: RowObj[];
   id: string;
   name: string;
   accountNo?: string;
@@ -16,6 +17,9 @@ export type RowObj = {
   rate?: string;
 
   presentReading?: string;
+  previousReading?: string;
+  installedReading?: string;
+  pulledOutReading?: string;
   date?: string;
   vat?: string | number;
 
