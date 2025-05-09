@@ -112,7 +112,7 @@ export default function MeterManagementTable({ tableData }: { tableData: RowObj[
           colorScheme="blue"
           size="sm"
           onClick={() =>
-            window.location.href = `/admin/meter-management/meter-reading/${row.original.meterNo}`
+            window.location.href = `/admin/meter-management/meter-reading/`
           }
           rightIcon={<MdChevronRight />}
         >
@@ -193,11 +193,11 @@ export default function MeterManagementTable({ tableData }: { tableData: RowObj[
               const headers = ['ID', 'Installed', 'Pulled-Out', 'Date', 'Meter No', 'Account No', 'Status'];
               const row = [
                 selectedConsumer?.id,
+                selectedConsumer?.accountNo,
                 selectedConsumer?.installedReading,
                 selectedConsumer?.pulledOutReading,
                 selectedConsumer?.date,
                 selectedConsumer?.meterNo,
-                selectedConsumer?.accountNo,
                 selectedConsumer?.status,
               ].join(',');
               const csv = [headers.join(','), row].join('\n');

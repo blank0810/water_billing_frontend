@@ -285,7 +285,7 @@ export default function MeterManagementTable({ tableData }: { tableData: RowObj[
 
             <Flex align="center" my="6">
               <Text fontSize="xl" fontWeight="bold" mr="">
-                Meter
+                Consumer Current Rates
               </Text>
               <Divider />
             </Flex>
