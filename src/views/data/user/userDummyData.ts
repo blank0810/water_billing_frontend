@@ -6,6 +6,7 @@ const userManagementData: RowObj[] = [
 	  profile: 'SC',
 	  name: 'Samwil',
 	  username: 'aiyahboy',
+	  email: 'samwil@gmail.com',
 	  userType: 'admin',
 	  status: 'Active',
 	  createdAt: '2022-01-01'
@@ -14,7 +15,8 @@ const userManagementData: RowObj[] = [
 	  id: '24353',
 	  profile: 'AS',
 	  name: 'GM Sandig',
-	  username: 'berto',
+	  username: 'bert',
+	  email: 'bert@gmail.com',
 	  userType: 'user',
 	  status: 'Inactive',
 	  createdAt: '2021-12-15'
@@ -24,10 +26,21 @@ const userManagementData: RowObj[] = [
 	  profile: 'GB',
 	  name: 'Goni',
 	  username: 'goni',
+	  email: 'gon@gmail.com',
 	  userType: 'user',
 	  status: 'Error',
 	  createdAt: '2021-12-15'
-	}
+	},
+	{
+		id: '64545',
+		profile: 'C',
+		name: 'Sirken',
+		username: 'lochinver',
+		email: 'emergency@gmail.com',
+		userType: 'user',
+		status: 'Error',
+		createdAt: '2021-12-17'
+	  }
   ];
   
   export default userManagementData;

@@ -1,8 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
+  Button,
+  Divider,
   Flex,
+  Grid,
   Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+  List,
+  ListItem,
+  SimpleGrid,
   Table,
   Tbody,
   Td,
@@ -11,17 +20,15 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-  Button,
-  Divider,
   Avatar,
-  InputGroup,
-  Input,
-  InputRightElement,
-  Grid,
-  List,
-  ListItem,
-  SimpleGrid,
 } from '@chakra-ui/react';
+import {
+  MdChevronRight,
+  MdDownload,
+  MdRotate90DegreesCcw,
+  MdSearch,
+} from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -31,31 +38,20 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import Card from 'components/card/Card';
-import {
-  MdDownload,
-  MdSearch,
-  MdChevronRight,
-  MdRotate90DegreesCcw,
-} from 'react-icons/md';
-import * as React from 'react';
 import { RowObj } from 'views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function MeterManagementTable({
-  tableData,
-}: {
-  tableData: RowObj[];
-}) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [filteredData, setFilteredData] = React.useState<RowObj[]>([]);
-  const [selectedConsumer, setSelectedConsumer] = React.useState<RowObj | null>(null);
-  const [consumerReadingData, setConsumerReadingData] = React.useState<RowObj[]>([]);
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+export default function MeterManagementTable({ tableData }: { tableData: RowObj[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState<RowObj[]>([]);
+  const [selectedConsumer, setSelectedConsumer] = useState<RowObj | null>(null);
+  const [consumerReadingData, setConsumerReadingData] = useState<RowObj[]>([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+  const textColor = useColorModeValue('gray.800', 'white');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 
   const handleReset = () => {
     setSearchQuery('');
@@ -65,7 +61,7 @@ export default function MeterManagementTable({
     setDropdownVisible(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!searchQuery) {
       setFilteredData([]);
       setDropdownVisible(false);
@@ -84,41 +80,41 @@ export default function MeterManagementTable({
 
   const columns = [
     columnHelper.accessor('id', {
-      header: () => <Text fontSize="sm" color="gray.400">ID</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm" fontWeight="700">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">ID</Text>,
+      cell: (info) => <Text fontWeight="bold" color={textColor}>{info.getValue()}</Text>,
     }),
     columnHelper.accessor('installedReading', {
-      header: () => <Text fontSize="sm" color="gray.400">INSTALLED READING</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Installed Reading</Text>,
+      cell: (info) => <Text>{info.getValue()}</Text>,
     }),
     columnHelper.accessor('pulledOutReading', {
-      header: () => <Text fontSize="sm" color="gray.400">PULLED-OUT READING</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Pulled-Out Reading</Text>,
+      cell: (info) => <Text>{info.getValue()}</Text>,
     }),
     columnHelper.accessor('date', {
-      header: () => <Text fontSize="sm" color="gray.400">INSTALL DATE</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Install Date</Text>,
+      cell: (info) => <Text>{info.getValue()}</Text>,
     }),
     columnHelper.accessor('meterNo', {
-      header: () => <Text fontSize="sm" color="gray.400">METER NO</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Meter No</Text>,
+      cell: (info) => <Text>{info.getValue()}</Text>,
     }),
     columnHelper.accessor('status', {
-      header: () => <Text fontSize="sm" color="gray.400">STATUS</Text>,
-      cell: (info) => <Text color={textColor} fontSize="sm">{info.getValue()}</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Status</Text>,
+      cell: (info) => <Text>{info.getValue()}</Text>,
     }),
     columnHelper.display({
       id: 'actions',
-      header: () => <Text fontSize="sm" color="gray.400">Details</Text>,
+      header: () => <Text fontSize="sm" color="gray.500">Details</Text>,
       cell: ({ row }) => (
         <Button
           variant="ghost"
           colorScheme="blue"
-          onClick={() => {
-            window.location.href = `/admin/meter-management/meter-reading/${row.original.meterNo}`;
-          }}
-          rightIcon={<MdChevronRight />}
           size="sm"
+          onClick={() =>
+            window.location.href = `/admin/meter-management/meter-reading/${row.original.meterNo}`
+          }
+          rightIcon={<MdChevronRight />}
         >
           View
         </Button>
@@ -136,16 +132,16 @@ export default function MeterManagementTable({
   });
 
   return (
-    <Card flexDirection="column" w="100%" h="100%" px="0px" overflow="hidden">
-      <Flex justifyContent="space-between" px="25px" pt="20px">
-        <Box position="relative" w="300px">
+    <Card p="6">
+      <Flex justify="space-between" mb="6">
+        {/* Search Box */}
+        <Box w="300px" position="relative">
           <InputGroup>
             <Input
               placeholder="Search consumer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setDropdownVisible(true)}
-              color='#1B254B'
             />
             <InputRightElement>
               <Icon as={MdSearch} color="gray.400" />
@@ -156,31 +152,30 @@ export default function MeterManagementTable({
             <Box
               position="absolute"
               top="42px"
-              width="100%"
+              w="100%"
               bg="white"
-              boxShadow="md"
-              borderRadius="md"
+              shadow="md"
+              rounded="md"
               zIndex="10"
-              maxHeight="200px"
+              maxH="200px"
               overflowY="auto"
             >
-              <List spacing={1}>
-                {filteredData.map((consumer, index) => (
+              <List spacing={0}>
+                {filteredData.map((consumer, i) => (
                   <ListItem
-                    key={index}
-                    px={3}
+                    key={i}
+                    px={4}
                     py={2}
                     _hover={{ bg: 'gray.100', cursor: 'pointer' }}
                     onClick={() => {
                       setSelectedConsumer(consumer);
                       setSearchQuery(consumer.name);
                       setDropdownVisible(false);
-
                       const rows = tableData.filter(item => item.meterNo === consumer.meterNo);
                       setConsumerReadingData(rows);
                     }}
                   >
-                    <Text fontSize="sm">{consumer.name} - {consumer.accountNo}</Text>
+                    {consumer.name} - {consumer.accountNo}
                   </ListItem>
                 ))}
               </List>
@@ -188,26 +183,25 @@ export default function MeterManagementTable({
           )}
         </Box>
 
-        <Flex gap={2}>
+        {/* Buttons */}
+        <Flex gap={3}>
           <Button
-            variant="outline"
             size="sm"
+            variant="outline"
             isDisabled={!selectedConsumer}
             onClick={() => {
-              const headers = ['ID', 'Installed Reading', 'Pulled-out Reading', 'Install Date', 'Meter No', 'Account No', 'Status'];
-              const csvRows = [
-                headers.join(','),
-                [
-                  selectedConsumer?.id,
-                  selectedConsumer?.installedReading,
-                  selectedConsumer?.pulledOutReading,
-                  selectedConsumer?.date,
-                  selectedConsumer?.meterNo,
-                  selectedConsumer?.accountNo,
-                  selectedConsumer?.status
-                ].join(','),
-              ];
-              const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+              const headers = ['ID', 'Installed', 'Pulled-Out', 'Date', 'Meter No', 'Account No', 'Status'];
+              const row = [
+                selectedConsumer?.id,
+                selectedConsumer?.installedReading,
+                selectedConsumer?.pulledOutReading,
+                selectedConsumer?.date,
+                selectedConsumer?.meterNo,
+                selectedConsumer?.accountNo,
+                selectedConsumer?.status,
+              ].join(',');
+              const csv = [headers.join(','), row].join('\n');
+              const blob = new Blob([csv], { type: 'text/csv' });
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
@@ -215,139 +209,105 @@ export default function MeterManagementTable({
               a.click();
               window.URL.revokeObjectURL(url);
             }}
-            rightIcon={<MdDownload size={16} />}
+            rightIcon={<MdDownload />}
           >
             Export
           </Button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleReset}
-            rightIcon={<MdRotate90DegreesCcw size={16} />}
-          >
+          <Button size="sm" variant="outline" onClick={handleReset} rightIcon={<MdRotate90DegreesCcw />}>
             Reset
           </Button>
         </Flex>
       </Flex>
 
-      <Box
-  mt="6"
-  mx="25px"
-  p="8"
-  bg={useColorModeValue('white', '#1B254B')}
-  borderRadius="2xl"
-  boxShadow="sm"
-  border="1px solid"
-  borderColor={borderColor}
->
-  {!selectedConsumer ? (
-    <Text fontSize="lg" color="gray.400" textAlign="center">
-      No consumer selected
-    </Text>
-  ) : (
-    <>
-      {/* Top Section */}
-      <Grid templateColumns={['1fr', '25% 75%']} gap="6" mb="6">
-        <Flex justify="center" align="center">
-          <Avatar size="2xl" name={selectedConsumer.name} />
-        </Flex>
-        <Grid templateColumns={['1fr', 'repeat(2, 1fr)']} gap="6">
-          <Box>
-            <Text fontSize="md" fontWeight="semibold" color="gray.500">Consumer Name</Text>
-            <Text fontSize="xl" fontWeight="bold" color="gray.700">{selectedConsumer.name}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="md" fontWeight="semibold" color="gray.500">Account No</Text>
-            <Text fontSize="xl" fontWeight="bold" color="gray.700">{selectedConsumer.accountNo}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="md" fontWeight="semibold" color="gray.500">Address</Text>
-            <Text fontSize="lg" color="gray.600">{selectedConsumer.address}</Text>
-          </Box>
-          <Box>
-            <Text fontSize="md" fontWeight="semibold" color="gray.500">Contact</Text>
-            <Text fontSize="lg" color="gray.600">{selectedConsumer.contact}</Text>
-          </Box>
-        </Grid>
-      </Grid>
+      {/* Consumer Info & Table */}
+      <Box p={6} bg="gray.50" rounded="2xl" border="1px solid" borderColor={borderColor}>
+        {!selectedConsumer ? (
+          <Text align="center" color="gray.500">No consumer selected</Text>
+        ) : (
+          <>
+            <Grid templateColumns={['1fr', '25% 75%']} gap="6" mb="6">
+              <Flex justify="center" align="center">
+                <Avatar size="2xl" name={selectedConsumer.name} />
+              </Flex>
+              <Grid templateColumns={['1fr', 'repeat(2, 1fr)']} gap="4">
+                <Box>
+                  <Text fontSize="sm" color="gray.500">Consumer</Text>
+                  <Text fontSize="lg" fontWeight="bold">{selectedConsumer.name}</Text>
+                </Box>
+                <Box>
+                  <Text fontSize="sm" color="gray.500">Account No</Text>
+                  <Text fontSize="lg" fontWeight="bold">{selectedConsumer.accountNo}</Text>
+                </Box>
+                <Box>
+                  <Text fontSize="sm" color="gray.500">Address</Text>
+                  <Text>{selectedConsumer.address}</Text>
+                </Box>
+                <Box>
+                  <Text fontSize="sm" color="gray.500">Contact</Text>
+                  <Text>{selectedConsumer.contact}</Text>
+                </Box>
+              </Grid>
+            </Grid>
 
-      <Divider my="6" borderColor={borderColor} />
+            <Divider my="6" />
 
-      <SimpleGrid columns={[1, 3]} spacing="6">
-        <Flex
-          p="4"
-          bg={useColorModeValue('gray.50', 'gray.700')}
-          borderRadius="lg"
-          align="center"
-          justify="space-between"
-        >
-          <Box>
-            <Text fontSize="sm" fontWeight="medium" color="gray.500">Bill Amount</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-              ₱{selectedConsumer.billAmount?.toFixed(2) ?? '0.00'}
-            </Text>
-          </Box>
-        </Flex>
+            <SimpleGrid columns={[1, 3]} spacing="4">
+              <Box bg="white" p="4" shadow="sm" rounded="md">
+                <Text fontSize="sm" color="gray.500">Bill Amount</Text>
+                <Text fontSize="2xl" fontWeight="bold" color="blue.500">
+                  ₱{selectedConsumer.billAmount?.toFixed(2) ?? '0.00'}
+                </Text>
+              </Box>
+              <Box bg="white" p="4" shadow="sm" rounded="md">
+                <Text fontSize="sm" color="gray.500">Consumption</Text>
+                <Text fontSize="2xl" fontWeight="bold" color="blue.500">
+                  {selectedConsumer.consumption ?? '0'} m³
+                </Text>
+              </Box>
+              <Box bg="white" p="4" shadow="sm" rounded="md">
+                <Text fontSize="sm" color="gray.500">Status</Text>
+                <Text fontSize="2xl" fontWeight="bold" color="blue.500">
+                  {selectedConsumer.status ?? 'Unknown'}
+                </Text>
+              </Box>
+            </SimpleGrid>
 
-        <Flex
-          p="4"
-          bg={useColorModeValue('gray.50', 'gray.700')}
-          borderRadius="lg"
-          align="center"
-          justify="space-between"
-        >
-          <Box>
-            <Text fontSize="sm" fontWeight="medium" color="gray.500">Consumption</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-              {selectedConsumer.consumption ?? '0'} cu.m
-            </Text>
-          </Box>
-        </Flex>
-
-        <Flex
-          p="4"
-          bg={useColorModeValue('gray.50', 'gray.700')}
-          borderRadius="lg"
-          align="center"
-          justify="space-between"
-        >
-          <Box>
-            <Text fontSize="sm" fontWeight="medium" color="gray.500">VAT</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-              ₱{selectedConsumer.vat ?? '0.00'}
-            </Text>
-          </Box>
-        </Flex>
-      </SimpleGrid>
-    </>
-  )}
-</Box>
+            <Flex align="center" my="6">
+  <Text fontSize="xl" fontWeight="bold" mr="">
+    Meter
+  </Text>
+  <Divider />
+</Flex>
 
 
-      <Box px="25px" py="4">
-        <Table variant="simple">
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</Th>
+            {/* Table */}
+            <Table variant="simple" size="sm">
+              <Thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <Th key={header.id}>
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                      </Th>
+                    ))}
+                  </Tr>
                 ))}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
+              </Thead>
+              <Tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <Td key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Td>
+                    ))}
+                  </Tr>
                 ))}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+              </Tbody>
+            </Table>
+          </>
+        )}
       </Box>
     </Card>
   );

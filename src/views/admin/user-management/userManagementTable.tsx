@@ -82,6 +82,11 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
       header: () => <Text fontSize="sm" color="gray.400">USERNAME</Text>,
       cell: (info) => <Text color={textColor} fontSize="sm">@{info.getValue()}</Text>
     }),
+    columnHelper.accessor('email', {
+      id: 'email',
+      header: () => <Text fontSize="sm" color="gray.400">EMAIL</Text>,
+      cell: (info) => <Text color={textColor} fontSize="sm">@{info.getValue()}</Text>
+    }),
     columnHelper.accessor('createdAt', {
       id: 'createdAt',
       header: () => <Text fontSize="sm" color="gray.400">CREATED AT</Text>,
