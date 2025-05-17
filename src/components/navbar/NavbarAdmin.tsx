@@ -97,8 +97,7 @@ export default function AdminNavbar(props: {
           <AdminNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}
-            fixed={props.fixed}
-          />
+            fixed={props.fixed}       />
         </Box>
       </Flex>
     </Box>
