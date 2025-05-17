@@ -23,13 +23,15 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { MdInfoOutline, MdNotificationsNone } from 'react-icons/md';
 import routes from 'routes';
 import { useRouter } from 'next/navigation';
+import APIModal from 'components/apiModal';
 
 export default function HeaderLinks(props: {
   secondary: boolean;
   onOpen: boolean | any;
   fixed: boolean | any;
+  setApiKey: any;
 }) {
-  const { secondary } = props;
+  const { secondary, setApiKey } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
 
@@ -66,6 +68,7 @@ export default function HeaderLinks(props: {
         borderRadius="30px"
       />
       <SidebarResponsive routes={routes} />
+      <APIModal setApiKey={setApiKey} />
       <Menu>
         <MenuButton p="0px">
           <Icon
