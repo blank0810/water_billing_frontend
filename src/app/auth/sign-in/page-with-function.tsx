@@ -104,7 +104,7 @@ export default function SignIn() {
             fontSize="md"
             textAlign="center"
           >
-            Make sure to enter your registered username and password.!
+            Make sure to enter your registered username and password!
           </Text>
         </Box>
         <FormControl>

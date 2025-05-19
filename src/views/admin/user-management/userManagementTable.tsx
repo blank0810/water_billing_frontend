@@ -302,3 +302,4 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
     </Card>
   );
 }
+

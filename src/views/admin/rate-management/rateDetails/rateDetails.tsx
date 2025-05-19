@@ -34,7 +34,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import { exportToCSV } from 'utils/exportToCSV';
-import CenteredPopover from './popover';
+import CenteredPopover from 'components/popovers/rate-breakdown';
 
 type RateDetail = {
   description: string;

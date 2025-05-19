@@ -23,8 +23,8 @@ interface BannerProps {
 export default function Banner({
   avatar,
   onImageChange,
-  height = '200px',
-  width = '200px',
+  height = '160px',
+  width = '160px',
   borderRadius = 'full',
 }: BannerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,50 +33,68 @@ export default function Banner({
     fileInputRef.current?.click();
   };
 
-  return (
-    <Box position="relative" w={width}>
-      {/* Avatar Container */}
-      <Box
-        w={width}
-        h={height}
-        borderRadius={borderRadius}
-        overflow="hidden"
-        position="relative"
-      >
-        {avatar ? (
-          <Image
-            src={avatar}
-            alt="Avatar"
-            objectFit="cover"
-            w="full"
-            h="full"
-          />
-        ) : (
-          <Box
-            bg="gray.200"
-            w="full"
-            h="full"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text color="gray.500">No Image</Text>
-          </Box>
-        )}
-      </Box>
+  const bgColor = useColorModeValue('gray.100', 'gray.700');
+  const borderColor = useColorModeValue('blue.300', 'blue.600');
 
-      {/* Larger Edit Button at bottom-right overlapping */}
-      <Box position="absolute" bottom="-5px" right="-5px" zIndex={3}>
+  return (
+    <Box
+      position="relative"
+      w={width}
+      h={height}
+      cursor="pointer"
+      role="group"
+      rounded={borderRadius}
+      boxShadow="md"
+      borderWidth="2px"
+      borderColor={borderColor}
+      overflow="hidden"
+      bg={bgColor}
+      transition="all 0.3s ease"
+    >
+      {/* Avatar Image */}
+      {avatar ? (
+        <Image
+          src={avatar}
+          alt="Avatar"
+          objectFit="cover"
+          w="full"
+          h="full"
+          transition="transform 0.3s ease"
+          _groupHover={{ transform: 'scale(1.05)' }}
+          borderRadius={borderRadius}
+          userSelect="none"
+          draggable={false}
+        />
+      ) : (
+        <Box
+          w="full"
+          h="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          color={useColorModeValue('gray.500', 'gray.400')}
+          fontWeight="medium"
+          fontSize="md"
+        >
+          No Image
+        </Box>
+      )}
+
+      {/* Edit Button */}
+      <Box position="absolute" bottom="0" right="0" transform="translate(25%, 25%)" zIndex={5}>
         <Tooltip label="Upload Avatar" hasArrow>
           <IconButton
             aria-label="Edit avatar"
-            icon={<EditIcon fontSize="lg" />}
-            boxSize="44px"
+            icon={<EditIcon fontSize="16px" />}
+            boxSize="36px"
             onClick={handleEditClick}
             borderRadius="full"
             bg="blue.500"
             color="white"
             _hover={{ bg: 'blue.600' }}
+            shadow="md"
+            _focus={{ boxShadow: 'outline' }}
           />
         </Tooltip>
       </Box>
