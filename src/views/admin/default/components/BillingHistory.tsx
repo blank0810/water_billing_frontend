@@ -1,65 +1,94 @@
-// Chakra imports
+import React from 'react'
+import LineChart from '@/components/charts/LineChart'
+import {
+  billingTrendChartData,
+  billingTrendChartOptions,
+} from '@/variables/billling'
 import {
   Box,
   Button,
+  Card,
   Flex,
   Icon,
-  Text,
-  useColorModeValue,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
+  MenuList,
+  Text,
+  useColorModeValue,
 } from '@chakra-ui/react'
-import Card from 'components/card/Card'
-import LineChart from 'components/charts/LineChart'
-import React from 'react'
-
 import { MdMoreHoriz } from 'react-icons/md'
-import { billingTrendChartData, billingTrendChartOptions } from 'variables/billling'
 
-export default function MonthlyBillTrend(props: { [x: string]: any }) {
-  const { ...rest } = props
-
-  const textColor = useColorModeValue('secondaryGray.900', 'white')
-  const iconColor = useColorModeValue('brand.500', 'white')
-  const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100')
-  const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' })
-  const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' })
+export default function MonthlyBillTrend() {
+  const textColor = useColorModeValue('gray.800', 'whiteAlpha.900')
+  const iconColor = useColorModeValue('gray.600', 'gray.300')
+  const bgButton = useColorModeValue('gray.100', 'whiteAlpha.100')
+  const hoverBg = useColorModeValue('gray.200', 'whiteAlpha.200')
+  const menuBg = useColorModeValue('white', 'gray.700')
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100')
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const shadowHover = useColorModeValue('md', 'dark-lg')
 
   return (
-    <Card w="100%" {...rest}>
-      <Flex align="center" w="100%" px="15px" py="10px">
-        <Text me="auto" color={textColor} fontSize="xl" fontWeight="700">
+    <Card
+      w="100%"
+      px={6}
+      py={4}
+      bg={cardBg}
+      overflow="hidden"
+      transition="all 0.3s ease"
+      _hover={{
+        transform: 'translateY(-4px)',
+        boxShadow: shadowHover,
+      }}
+    >
+      {/* Sticky Header */}
+      <Flex
+        align="center"
+        justify="space-between"
+        position="sticky"
+        top={0}
+        zIndex={1}
+        bg={cardBg}
+        backdropFilter="blur(6px)"
+        borderBottom="1px solid"
+        borderColor={borderColor}
+        pb={3}
+        mb={4}
+      >
+        <Text fontSize="xl" fontWeight="semibold" color={textColor}>
           Monthly Bill Trend
         </Text>
 
         <Menu>
           <MenuButton
             as={Button}
-            alignItems="center"
-            justifyContent="center"
             bg={bgButton}
-            _hover={bgHover}
-            _focus={bgFocus}
-            _active={bgFocus}
-            w="50px"
-            h="37px"
-            lineHeight="100%"
-            borderRadius="10px"
-            display="flex"
-            {...rest}
+            _hover={{
+              bg: hoverBg,
+              transform: 'scale(1.05)',
+            }}
+            _active={{
+              bg: hoverBg,
+            }}
+            transition="all 0.2s ease"
+            borderRadius="md"
+            w="36px"
+            h="36px"
+            p={0}
           >
-            <Icon as={MdMoreHoriz} color={iconColor} w="24px" h="24px" />
+            <Icon as={MdMoreHoriz} color={iconColor} boxSize={5} />
           </MenuButton>
-          <MenuList>
+          <MenuList bg={menuBg} borderRadius="md" shadow="md">
             <MenuItem>Export Report</MenuItem>
             <MenuItem>Filter by Year</MenuItem>
+            <MenuItem>See Full Report</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
 
-      <Box h="260px" mt="auto">
+      {/* Chart Section */}
+      <Box h="260px">
         <LineChart
           chartData={billingTrendChartData}
           chartOptions={billingTrendChartOptions}

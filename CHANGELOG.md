@@ -1,45 +1,29 @@
 # Changelog
 
-## [3.0.0] 2025-14-01
+## [3.0.0] 2025-20-01
 
 ### Upgraded to React 19 ⚡️
 
 ### Upgraded to Next.js 15 ⚡️
 
-- `<Scrollbar>` component adapted to SSR
+## [2.2.0] 2024-07-19
 
-## [2.2.1] 2024-07-19
+### Vulnerabilities removed
 
-### Vulnerabilities fixed
+## [2.1.0] 2024-06-28
 
-## [2.2.0] 2024-02-06
+### GPT-4o Support
+
+Updated GPT-3.5-Turbo to GPT-4o
+
+## [2.0.0] 2024-02-06
 
 ### Next 14
 
-## [2.1.0] 2023-11-10
+Updated Next
 
-### Bug fix - Build error due to Types
+## [1.0.0] 2023-06-20
 
-- Updated types
-- Updated charts
+### Official Release
 
-## [2.0.0] 2023-09-13
-
-### Big update - NextJS 13 Update
-
-- Layouts update
-- Updated routing
-- Updated image component
-- Updated link component
-
-## [1.0.1] 2022-03-22
-
-### Bug Fixing
-
-Auth layout fixed
-
-## [1.0.0] 2022-10-17
-
-### Original Release
-
-- Added Typescript & NextJS
+Added TypeScript & NextJS

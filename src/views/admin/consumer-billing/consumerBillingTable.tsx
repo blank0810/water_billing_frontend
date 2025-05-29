@@ -23,7 +23,7 @@ import {
   useReactTable,
   getPaginationRowModel
 } from '@tanstack/react-table';
-import Card from 'components/card/Card';
+import Card from '@/components/card/Card';
 import {
   MdDelete,
   MdEdit,
@@ -33,7 +33,7 @@ import {
   MdChevronRight
 } from 'react-icons/md';
 import * as React from 'react';
-import { RowObj } from 'views/data/consumer/consumerData';
+import { RowObj } from '@/views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 

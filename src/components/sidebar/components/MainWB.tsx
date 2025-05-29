@@ -2,7 +2,7 @@
 import { Flex, Image, Text, useColorModeValue } from '@chakra-ui/react';
 
 // Custom components
-import { HSeparator } from 'components/separator/Separator';
+import { HSeparator } from '@/components/separator/Separator';
 
 export function SidebarHead() {
 	// Chakra color mode

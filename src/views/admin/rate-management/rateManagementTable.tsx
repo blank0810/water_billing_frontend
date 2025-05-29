@@ -37,8 +37,8 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import Card from 'components/card/Card';
-import { RowObj } from 'views/data/consumer/consumerData';
+import Card from '@/components/card/Card';
+import { RowObj } from '@/views/data/consumer/consumerData';
 
 const columnHelper = createColumnHelper<RowObj>();
 
@@ -70,8 +70,8 @@ export default function MeterManagementTable({ tableData }: { tableData: RowObj[
 
     const matches = tableData.filter((consumer) =>
       consumer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      consumer.accountNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      consumer.meterNo.toLowerCase().includes(searchQuery.toLowerCase())
+      consumer.accountNo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (consumer.meterNo ?? '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     setFilteredData(matches);

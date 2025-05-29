@@ -1,10 +1,7 @@
 import {
-  Avatar,
   Badge,
   Box,
-  Button,
   Flex,
-  Progress,
   Table,
   Tbody,
   Td,
@@ -13,6 +10,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  Icon,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -22,7 +20,6 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-// Custom components
 import * as React from 'react';
 
 type RowObj = {
@@ -34,209 +31,178 @@ type RowObj = {
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function TopAreaTable(props: { tableData: any }) {
-  const { tableData } = props;
+export default function TopAreaTable({ tableData }: { tableData: RowObj[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const textColorSecondary = useColorModeValue('secondaryGray.600', 'white');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  let defaultData = tableData;
 
-  // Updated columns
+  // Colors & shadows to match OverallOverview theme
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const textColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+  const subTextColor = useColorModeValue('gray.600', 'gray.400');
+  const borderColor = useColorModeValue('gray.50', 'whiteAlpha.300');
+  const hoverBg = useColorModeValue('gray.50', 'whiteAlpha.100');
+  const shadowHover = useColorModeValue('md', 'dark-lg');
+
   const columns = [
     columnHelper.accessor('area', {
-      id: 'area',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          AREA
+        <Text fontSize="sm" fontWeight="semibold" color={subTextColor}>
+          Area
         </Text>
       ),
-      cell: (info: any) => (
-        <Text color={textColor} fontSize="sm" fontWeight="600">
+      cell: (info) => (
+        <Text fontSize="md" fontWeight="bold" color={textColor}>
           {info.getValue()}
         </Text>
       ),
     }),
     columnHelper.accessor('totalConsumers', {
-      id: 'totalConsumers',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          TOTAL CONSUMERS
+        <Text fontSize="sm" fontWeight="semibold" color={subTextColor}>
+          Total Consumers
         </Text>
       ),
       cell: (info) => (
-        <Text color={textColorSecondary} fontSize="sm" fontWeight="500">
+        <Text fontSize="md" color={textColor}>
           {info.getValue()}
         </Text>
       ),
     }),
     columnHelper.accessor('totalActive', {
-      id: 'totalActive',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          TOTAL ACTIVE
+        <Text fontSize="sm" fontWeight="semibold" color={subTextColor}>
+          Total Active
         </Text>
       ),
-      cell: (info) => {
-        const activeValue = info.getValue();
-        return (
-          <Badge
-            bg="green.50"
-            color="green.600"
-            fontSize="0.8em"
-            borderRadius="8px"
-            px="2"
-            py="1"
-          >
-            {activeValue}
-          </Badge>
-        );
-      },
+      cell: (info) => (
+        <Badge
+          colorScheme="green"
+          variant="subtle"
+          fontSize="sm"
+          borderRadius="md"
+          px={3}
+          py={1}
+        >
+          {info.getValue()}
+        </Badge>
+      ),
     }),
-    
-    
     columnHelper.accessor('totalInactive', {
-      id: 'totalInactive',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          TOTAL INACTIVE
+        <Text fontSize="sm" fontWeight="semibold" color={subTextColor}>
+          Total Inactive
         </Text>
       ),
-      cell: (info) => {
-        const inactiveValue = info.getValue();
-        return (
-          <Badge
-            bg="red.50"
-            color="red.600"
-            fontSize="0.8em"
-            borderRadius="8px"
-            px="2"
-            py="1"
-          >
-            {inactiveValue}
-          </Badge>
-        );
-      },
-    }),    
-    
+      cell: (info) => (
+        <Badge
+          colorScheme="red"
+          variant="subtle"
+          fontSize="sm"
+          borderRadius="md"
+          px={3}
+          py={1}
+        >
+          {info.getValue()}
+        </Badge>
+      ),
+    }),
   ];
 
-  const [data, setData] = React.useState(() => [...defaultData]);
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
-    state: {
-      sorting,
-    },
+    state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
   });
 
   return (
-    <Flex
-      direction="column"
+    <Box
       w="100%"
-      overflowX={{ sm: 'scroll', lg: 'hidden' }}
+      overflowX="auto"
+      bg={cardBg}
+      borderRadius="lg"
+      border="1px solid"
+      borderColor={borderColor}
+      px={{ base: 4, md: 6 }}
+      py={{ base: 4, md: 6 }}
+      transition="all 0.2s ease"
+      _hover={{
+        transform: 'translateY(-4px)',
+        boxShadow: shadowHover,
+      }}
     >
-      <Flex
-        align={{ sm: 'flex-start', lg: 'center' }}
-        justify="space-between"
-        w="100%"
-        px="22px"
-        pb="20px"
-        mb="10px"
-        boxShadow="0px 40px 58px -20px rgba(112, 144, 176, 0.26)"
-      >
-        <Text color={textColor} fontSize="xl" fontWeight="600">
-          CONSUMER DETAILS
+      <Flex mb={6} align="center" justify="space-between">
+        <Text fontSize={{ base: 'xl', md: '2xl' }} fontWeight="semibold" color={textColor}>
+          Consumer Details
         </Text>
       </Flex>
-      <Box>
-        <Table variant="simple" color="gray.500" mt="12px">
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <Th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      pe="10px"
-                      borderColor={borderColor}
-                      cursor="pointer"
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      <Flex
-                        justifyContent="space-between"
-                        align="center"
-                        fontSize={{ sm: '10px', lg: '12px' }}
-                        color="gray.400"
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: '',
-                          desc: '',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </Flex>
-                    </Th>
-                  );
-                })}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 11)
-              .map((row) => {
+
+      <Table size="md" variant="unstyled" whiteSpace="nowrap">
+        <Thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                const isSorted = header.column.getIsSorted();
                 return (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <Td
-                          key={cell.id}
-                          fontSize={{ sm: '14px' }}
-                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                          borderColor="transparent"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </Td>
-                      );
-                    })}
-                  </Tr>
+                  <Th
+                    key={header.id}
+                    px={{ base: 3, md: 4 }}
+                    py={3}
+                    borderBottom="1px solid"
+                    borderColor={borderColor}
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    color={subTextColor}
+                    textTransform="none"
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={header.column.getToggleSortingHandler()}
+                    _hover={{ color: useColorModeValue('blue.600', 'blue.300') }}
+                    aria-sort={
+                      isSorted ? (isSorted === 'asc' ? 'ascending' : 'descending') : undefined
+                    }
+                  >
+                    <Flex align="center" justify="space-between" userSelect="none">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      <Box as="span" ml={2} fontSize="lg" lineHeight="1">
+                        {{
+                          asc: '▲',
+                          desc: '▼',
+                        }[isSorted as string] ?? ''}
+                      </Box>
+                    </Flex>
+                  </Th>
                 );
               })}
-          </Tbody>
-        </Table>
-      </Box>
-    </Flex>
+            </Tr>
+          ))}
+        </Thead>
+
+        <Tbody>
+          {table.getRowModel().rows.map((row) => (
+            <Tr
+              key={row.id}
+              _hover={{ bg: hoverBg }}
+              transition="background-color 0.25s ease"
+              cursor="default"
+            >
+              {row.getVisibleCells().map((cell) => (
+                <Td
+                  key={cell.id}
+                  px={{ base: 3, md: 4 }}
+                  py={4}
+                  fontSize="md"
+                  color={textColor}
+                  border="none"
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Td>
+              ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </Box>
   );
 }

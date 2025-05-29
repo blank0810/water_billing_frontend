@@ -28,13 +28,12 @@ import {
   getPaginationRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import Card from 'components/card/Card';
+import Card from '@/components/card/Card';
 import { useState, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
-import { exportToCSV } from 'utils/exportToCSV';
-import CenteredPopover from 'components/popovers/rate-breakdown';
+import RateBreakdownModal from '@/components/modals/rateBreakdownModal';
 
 type RateDetail = {
   description: string;
@@ -78,10 +77,47 @@ const dummyData: RowObj[] = [
 
 const columnHelper = createColumnHelper<RowObj>();
 
+function exportToCSV(data: RowObj[]) {
+  const csvRows: string[] = [];
+  const headers = [
+    'Meter No',
+    'Rate Name',
+    'VAT',
+    'Penalty',
+    'Period',
+    'Start Date',
+    'End Date',
+  ];
+  csvRows.push(headers.join(','));
+
+  data.forEach(row => {
+    csvRows.push([
+      row.meterNo,
+      row.rateName,
+      row.vat,
+      row.penalty,
+      row.period,
+      row.startDate,
+      row.endDate,
+    ].join(','));
+  });
+
+  const csvContent = "data:text/csv;charset=utf-8," + csvRows.join('\n');
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'rate_details.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 export default function RateDetails() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<RateDetail[]>([]);
 
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -120,7 +156,16 @@ export default function RateDetails() {
       id: 'actions',
       header: () => <Text fontSize="sm" color="gray.400">Actions</Text>,
       cell: ({ row }) => (
-        <CenteredPopover rateBreakdowns={row.original.rateBreakdowns} />
+        <Button
+          size="sm"
+          colorScheme="blue"
+          onClick={() => {
+            setModalData(row.original.rateBreakdowns);
+            setIsModalOpen(true);
+          }}
+        >
+          Show Details
+        </Button>
       ),
     }),
   ];
@@ -202,7 +247,7 @@ export default function RateDetails() {
         <Box px="25px" mb="4">
           <DatePicker
             selected={selectedDate}
-            onChange={(date: Date) => {
+            onChange={(date: Date | null) => {
               setSelectedDate(date);
               setShowCalendar(false);
             }}
@@ -239,6 +284,12 @@ export default function RateDetails() {
           </Tbody>
         </Table>
       </Box>
+
+      <RateBreakdownModal
+        rateBreakdowns={modalData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 }

@@ -1,11 +1,12 @@
 import { Box, Flex, Stack } from '@chakra-ui/react';
-import Links from 'components/sidebar/components/Links';
-import SidebarCard from 'components/sidebar/components/SidebarCard';
-import { IRoute } from 'types/navigation';
-import MainWB from './MainWB';
+import Links from '@/components/sidebar/components/Links';
+import SidebarCard from '@/components/sidebar/components/SidebarCard';
+import { IRoute } from '@/types/navigation';
+import MainWB from '@/components/sidebar/components/MainWB';
 
 interface SidebarContentProps {
   routes: IRoute[];
+  isCollapsed: boolean;
 }
 
 function SidebarContent(props: SidebarContentProps) {

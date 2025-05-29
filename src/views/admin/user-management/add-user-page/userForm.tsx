@@ -1,25 +1,30 @@
 import {
   Box,
   Button,
-  Divider,
-  Flex,
+  Card,
+  CardBody,
   FormControl,
   FormLabel,
-  HStack,
   Input,
   Select,
   Stack,
-  Text,
+  Grid,
+  Flex,
   useColorModeValue,
   useToast,
-  Grid,
-  GridItem
+  useDisclosure,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Banner from "./userAvatar";
+import AddUserModal from "@/components/modals/addUserModal";
 
 export default function UserForm() {
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const inputBg = useColorModeValue("white", "#1B254B");
   const inputColor = useColorModeValue("gray.800", "gray.300");
@@ -29,6 +34,8 @@ export default function UserForm() {
     firstName: "",
     lastName: "",
     username: "",
+    password: "",
+    confirmPassword: "",
     address: "",
     contactNumber: "",
     email: "",
@@ -38,212 +45,260 @@ export default function UserForm() {
     createdAt: new Date().toLocaleDateString(),
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleOpenConfirm = (e: React.FormEvent) => {
     e.preventDefault();
+    onOpen();
+  };
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+  const handleSubmit = () => {
+    if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Password mismatch.",
+        description: "Please ensure both passwords match.",
         status: "error",
         duration: 3000,
         isClosable: true,
+        position: "top-right",
       });
+      onClose();
       return;
     }
 
-    const contactRegex = /^\d{11}$/;
-    if (!contactRegex.test(formData.contactNumber)) {
-      toast({
-        title: "Invalid Contact Number",
-        description: "Contact number must be exactly 11 digits.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
+    toast({
+      title: "User added successfully.",
+      description: `Welcome, ${formData.firstName}!`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      toast({
-        title: "Form submitted",
-        description: "User information has been saved.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      console.log(formData);
-      setIsSubmitting(false);
-    }, 1000);
+    console.log("Form submitted:", formData);
+    onClose();
   };
 
   return (
-    <Flex minH="100vh" justify="center" align="flex-start" bg={useColorModeValue("gray.50", "#111c44")} py={12} px={4}>
+    <Flex align="center" justify="center" p={4} direction="column">
       <Box
-        bg={useColorModeValue("white", "#1B254B")}
-        p={{ base: 6, md: 10 }}
-        rounded="2xl"
-        shadow="xl"
-        width="full"
-        maxW="8xl"
+        bgGradient="linear(to-b, #00008B, #1F51FF)"
+        w="full"
+        py={{ base: 18, md: 24 }}
+        borderRadius="2xl"
+        textAlign="center"
+        mb={-40}
+        zIndex={1}
+        position="relative"
       >
-        <form onSubmit={handleSubmit}>
-          <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
-            {/* Avatar Section */}
-            <GridItem>
-              <Box display="flex" justifyContent="center" mb={8}>
+        <Box color="white">
+          <Box fontSize={{ base: "2xl", md: "4xl" }} fontWeight="bold">
+            Add a New User
+          </Box>
+          <Box fontSize={{ base: "md", md: "lg" }} mt={2}>
+            Complete the form below
+          </Box>
+        </Box>
+      </Box>
+
+      <Box maxW="6xl" w="full" mt={-20} zIndex={2} position="relative">
+        <Card
+          borderRadius="2xl"
+          boxShadow="2xl"
+          bg={useColorModeValue("white", "#1A202C")}
+        >
+          <CardBody
+            as="form"
+            onSubmit={handleOpenConfirm}
+            py={10}
+            px={{ base: 4, md: 10 }}
+          >
+            <Stack direction={{ base: "column", md: "row" }} spacing={10} mb={8}>
+              <Flex flex="1" justify="center" align="center">
                 <Banner
                   avatar={undefined}
-                  onImageChange={(e) => console.log("Avatar uploaded:", e.target.files?.[0])}
-                  height="280px"
-                  width="280px"
+                  onImageChange={(e) =>
+                    console.log("Avatar uploaded:", e.target.files?.[0])
+                  }
+                  height="180px"
+                  width="180px"
                   borderRadius="full"
                 />
-              </Box>
-            </GridItem>
+              </Flex>
 
-            {/* Form Section */}
-            <GridItem>
-              <Stack spacing={2}>
-                <Text fontSize={{ base: "xl", md: "4xl" }} fontWeight="bold" color="blue.500" mb={1}>
-                  Add New User
-                </Text>
+              <Grid
+                templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+                gap={6}
+                flex="2"
+              >
+                <FormControl isRequired>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    name="firstName"
+                    placeholder="First name"
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <FormLabel>Last Name</FormLabel>
+                  <Input
+                    name="lastName"
+                    placeholder="Last name"
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <FormLabel>Username</FormLabel>
+                  <Input
+                    name="username"
+                    placeholder="Username"
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <FormLabel>User Type</FormLabel>
+                  <Select
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  >
+                    <option value="">Select Type</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Stack>
 
-                {/* Basic Info */}
-                <Stack spacing={5}>
-                  <HStack spacing={4} flexWrap="wrap">
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>First Name</FormLabel>
-                      <Input
-                        name="firstName"
-                        placeholder="First name"
-                        onChange={handleChange}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      />
-                    </FormControl>
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>Last Name</FormLabel>
-                      <Input
-                        name="lastName"
-                        placeholder="Last name"
-                        onChange={handleChange}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      />
-                    </FormControl>
-                  </HStack>
-                </Stack>
+            <Grid
+              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+              gap={6}
+              mb={6}
+            >
+              <FormControl isRequired>
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter password"
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      onClick={() => setShowPassword(!showPassword)}
+                      size="sm"
+                      variant="ghost"
+                    />
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
 
-                {/* Account Info */}
-                <Stack spacing={5}>
-                  <HStack spacing={4} flexWrap="wrap">
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>Username</FormLabel>
-                      <Input
-                        name="username"
-                        placeholder="Enter username"
-                        onChange={handleChange}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      />
-                    </FormControl>
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>User Type</FormLabel>
-                      <Select
-                        name="userType"
-                        value={formData.userType}
-                        onChange={handleChange}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                      </Select>
-                    </FormControl>
-                  </HStack>
-                </Stack>
+              <FormControl isRequired>
+                <FormLabel>Confirm Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Re-enter password"
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                      icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      size="sm"
+                      variant="ghost"
+                    />
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+            </Grid>
 
-                {/* Contact Info */}
-                <Stack spacing={5}>
-                  <HStack spacing={4} flexWrap="wrap">
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>Contact Number</FormLabel>
-                      <Input
-                        name="contactNumber"
-                        placeholder="Enter contact number"
-                        maxLength={11}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (/^\d*$/.test(value)) {
-                            handleChange(e);
-                          }
-                        }}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      />
-                    </FormControl>
-                    <FormControl isRequired flex="1" minW="200px" mb={4}>
-                      <FormLabel>Email</FormLabel>
-                      <Input
-                        name="email"
-                        type="email"
-                        placeholder="Enter email"
-                        onChange={handleChange}
-                        focusBorderColor="blue.500"
-                        bg={inputBg}
-                        color={inputColor}
-                        borderColor={inputBorderColor}
-                      />
-                    </FormControl>
-                  </HStack>
-                </Stack>
-              </Stack>
-            </GridItem>
-          </Grid>
-
-          {/* Other Information */}
-          <Stack spacing={6}>
-            <HStack spacing={4} flexWrap="wrap">
-              <FormControl flex="1" minW="200px" isRequired mb={4}>
-                <FormLabel>Address</FormLabel>
+            <Grid
+              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+              gap={6}
+              mb={6}
+            >
+              <FormControl isRequired>
+                <FormLabel>Contact Number</FormLabel>
                 <Input
-                  name="address"
-                  placeholder="Enter address"
-                  onChange={handleChange}
-                  focusBorderColor="blue.500"
+                  name="contactNumber"
+                  placeholder="11-digit number"
+                  maxLength={11}
+                  onChange={(e) =>
+                    /^\d*$/.test(e.target.value) && handleChange(e)
+                  }
                   bg={inputBg}
                   color={inputColor}
                   borderColor={inputBorderColor}
                 />
               </FormControl>
-              <FormControl flex="1" minW="200px" isRequired mb={4}>
+              <FormControl isRequired>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  onChange={handleChange}
+                  bg={inputBg}
+                  color={inputColor}
+                  borderColor={inputBorderColor}
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid
+              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+              gap={6}
+              mb={6}
+            >
+              <FormControl isRequired>
+                <FormLabel>Address</FormLabel>
+                <Input
+                  name="address"
+                  placeholder="Enter address"
+                  onChange={handleChange}
+                  bg={inputBg}
+                  color={inputColor}
+                  borderColor={inputBorderColor}
+                />
+              </FormControl>
+              <FormControl isRequired>
                 <FormLabel>Gender</FormLabel>
                 <Select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  focusBorderColor="blue.500"
                   bg={inputBg}
                   color={inputColor}
                   borderColor={inputBorderColor}
@@ -254,51 +309,49 @@ export default function UserForm() {
                   <option value="other">Other</option>
                 </Select>
               </FormControl>
-            </HStack>
+            </Grid>
 
-            <HStack spacing={4} flexWrap="wrap">
-              <FormControl flex="1" minW="200px" isRequired mb={4}>
+            <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+              <FormControl isRequired>
                 <FormLabel>Birth Date</FormLabel>
                 <Input
                   name="birthDate"
                   type="date"
                   value={formData.birthDate}
                   onChange={handleChange}
-                  focusBorderColor="blue.500"
                   bg={inputBg}
                   color={inputColor}
                   borderColor={inputBorderColor}
                 />
               </FormControl>
-              <FormControl flex="1" isRequired>
+              <FormControl isRequired>
                 <FormLabel>Date Created</FormLabel>
                 <Input
                   name="createdAt"
                   value={formData.createdAt}
                   isReadOnly
-                  focusBorderColor="gray.400"
                   bg={inputBg}
                   color={inputColor}
                   borderColor={inputBorderColor}
                 />
               </FormControl>
-            </HStack>
-          </Stack>
+            </Grid>
 
-          <Flex mt={8} justify="flex-end">
-            <Button
-              type="submit"
-              colorScheme="blue"
-              px={10}
-              isLoading={isSubmitting}
-              loadingText="Submitting"
-              rounded="lg"
-            >
-              Add user
-            </Button>
-          </Flex>
-        </form>
+            <Flex justify="flex-end" mt={10}>
+              <Button colorScheme="blue" size="lg" px={10} type="submit">
+                Add User
+              </Button>
+            </Flex>
+          </CardBody>
+        </Card>
       </Box>
+
+      <AddUserModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleSubmit}
+        formData={formData}
+      />
     </Flex>
   );
 }

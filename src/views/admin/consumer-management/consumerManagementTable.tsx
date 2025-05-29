@@ -39,8 +39,8 @@ import {
 } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { RowObj } from 'views/data/consumer/consumerData';
-import Card from 'components/card/Card';
+import { RowObj } from '@/views/data/consumer/consumerData';
+import Card from '@/components/card/Card';
 
 const columnHelper = createColumnHelper<RowObj>();
 

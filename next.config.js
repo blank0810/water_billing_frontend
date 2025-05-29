@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  reactStrictMode: false,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
+  reactStrictMode: false, // changed this to false
   images: {
     domains: [
       'images.unsplash.com',
@@ -14,5 +16,4 @@ const nextConfig = {
   },
 };
 
-// module.exports = withTM(nextConfig);
 module.exports = nextConfig;

@@ -2,7 +2,6 @@ import { Icon } from '@chakra-ui/react';
 import {
   MdDashboard,
   MdPeople,
-  MdPersonAdd,
   MdGroup,
   MdPerson,
   MdSpeed,
@@ -13,8 +12,8 @@ import {
 } from 'react-icons/md';
 import { FaUserPlus, FaUserCheck } from 'react-icons/fa';
 import { HiUserGroup } from 'react-icons/hi';
+import { IRoute } from './types/navigation';
 
-import { IRoute } from 'types/navigation';
 
 const routes: IRoute[] = [
   {

@@ -1,16 +1,17 @@
+'use client';
 /*eslint-disable*/
 
 import {
   Flex,
-  Link,
   List,
   ListItem,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import Link from '@/components/link/Link';
 
 export default function Footer() {
-  const textColor = useColorModeValue('gray.400', 'white');
+  const textColor = useColorModeValue('gray.500', 'white');
   return (
     <Flex
       zIndex="3"
@@ -18,35 +19,25 @@ export default function Footer() {
         base: 'column',
         xl: 'row',
       }}
-      alignItems={{
-        base: 'center',
-        xl: 'start',
-      }}
+      alignItems="center"
       justifyContent="space-between"
       px={{ base: '30px', md: '50px' }}
       pb="30px"
     >
       <Text
         color={textColor}
+        fontSize={{ base: 'xs', md: 'sm' }}
         textAlign={{
           base: 'center',
           xl: 'start',
         }}
-        mb={{ base: '20px', xl: '0px' }}
+        fontWeight="500"
+        mb={{ base: '10px', xl: '0px' }}
       >
         {' '}
         &copy; {new Date().getFullYear()}
         <Text as="span" fontWeight="500" ms="4px">
-          WATER-BOIS - ENAN, KLENT, Sir JAN
-          <Link
-            mx="3px"
-            color={textColor}
-            href=""
-            target="_blank"
-            fontWeight="700"
-          >
-            WATER-BOIS
-          </Link>
+          Made by EJK. All Rights Reserved.
         </Text>
       </Text>
     </Flex>
