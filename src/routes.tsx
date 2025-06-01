@@ -1,232 +1,96 @@
-import { Icon } from './lib/chakra';
+import { Icon } from '@chakra-ui/react';
 import {
-  MdFileCopy,
-  MdHome,
-  MdLock,
-  MdLayers,
-  MdAutoAwesome,
-  MdOutlineManageAccounts,
+  MdDashboard,
+  MdPeople,
+  MdGroup,
+  MdPerson,
+  MdSpeed,
+  MdPriceChange,
+  MdRequestQuote,
+  MdReceiptLong,
+  MdAnalytics,
 } from 'react-icons/md';
-import { IoMdPerson } from 'react-icons/io';
-import { LuHistory } from 'react-icons/lu';
-import { RoundedChart } from '@/components/icons/Icons';
-
-// Auth Imports
+import { FaUserPlus, FaUserCheck } from 'react-icons/fa';
+import { HiUserGroup } from 'react-icons/hi';
 import { IRoute } from './types/navigation';
+
 
 const routes: IRoute[] = [
   {
-    name: 'Chat UI',
-    path: '/',
-    icon: (
-      <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />
-    ),
-    collapse: false,
+    name: 'Dashboard',
+    layout: '/admin',
+    path: '/default',
+    icon: <Icon as={MdDashboard} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'All Templates',
-    disabled: true,
-    path: '/all-templates',
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    collapse: false,
-  },
-  {
-    name: 'My Projects',
-    disabled: true,
-    path: '/my-projects',
-    icon: <Icon as={MdLayers} width="20px" height="20px" color="inherit" />,
-    collapse: false,
-  },
-  // --- Others ---
-  {
-    name: 'Other Pages',
-    disabled: true,
-    path: '/others',
-    icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
-    collapse: true,
-    items: [
+    name: 'User Management',
+    layout: '/admin',
+    path: '/user-management',
+    icon: <Icon as={MdPeople} width="20px" height="20px" color="inherit" />,
+    subRoutes: [
       {
-        name: 'Prompt Page',
-        layout: '/others',
-        path: '/prompt',
-      },
-      {
-        name: 'Register',
-        layout: '/others',
-        path: '/register',
-      },
-      {
-        name: 'Sign In',
-        layout: '/others',
-        path: '/sign-in',
-      },
-    ],
-  },
-  // --- Admin Pages ---
-  {
-    name: 'Admin Pages',
-    disabled: true,
-    path: '/admin',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    collapse: true,
-    items: [
-      {
-        name: 'All Templates',
+        name: 'User List',
         layout: '/admin',
-        path: '/all-admin-templates',
+        path: '/user-management',
+        icon: <Icon as={HiUserGroup} width="20px" height="20px" color="inherit" />,
       },
       {
-        name: 'New Template',
+        name: 'Add User',
         layout: '/admin',
-        path: '/new-template',
+        path: '/user-management/add-user',
+        icon: <Icon as={FaUserPlus} width="20px" height="20px" color="inherit" />,
+      },
+    ]
+  },
+  {
+    name: 'Consumer Management',
+    layout: '/admin',
+    path: '/consumer-management',
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    subRoutes: [
+      {
+        name: 'Consumer List',
+        layout: '/admin',
+        path: '/consumer-management',
+        icon: <Icon as={MdGroup} width="20px" height="20px" color="inherit" />,
       },
       {
-        name: 'Edit Template',
+        name: 'Add Consumer',
         layout: '/admin',
-        path: '/edit-template',
+        path: '/consumer-management/add-consumer',
+        icon: <Icon as={FaUserCheck} width="20px" height="20px" color="inherit" />,
       },
-      {
-        name: 'Users Overview',
-        layout: '/admin',
-        path: '/overview',
-      },
-    ],
+    ]
   },
   {
-    name: 'Profile Settings',
-    disabled: true,
-    path: '/settings',
-    icon: (
-      <Icon
-        as={MdOutlineManageAccounts}
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
-    invisible: true,
-    collapse: false,
+    name: 'Rate Management',
+    layout: '/admin',
+    path: '/rate-management',
+    icon: <Icon as={MdPriceChange} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'History',
-    disabled: true,
-    path: '/history',
-    icon: <Icon as={LuHistory} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
+    name: 'Meter Management',
+    layout: '/admin',
+    path: '/meter-management',
+    icon: <Icon as={MdSpeed} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'Usage',
-    disabled: true,
-    path: '/usage',
-    icon: <Icon as={RoundedChart} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
+    name: 'Consumer Billing',
+    layout: '/admin',
+    path: '/consumer-billing',
+    icon: <Icon as={MdRequestQuote} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'My plan',
-    disabled: true,
-    path: '/my-plan',
-    icon: <Icon as={RoundedChart} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  // -------------- Prompt Pages --------------
-  {
-    name: 'Essay Generator',
-    disabled: true,
-    path: '/essay',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
+    name: 'Ledgers',
+    layout: '/admin',
+    path: '/ledgers',
+    icon: <Icon as={MdReceiptLong} width="20px" height="20px" color="inherit" />,
   },
   {
-    name: 'Content Simplifier',
-    disabled: true,
-    path: '/simplifier',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Product Description',
-    disabled: true,
-    path: '/product-description',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Email Enhancer',
-    disabled: true,
-    path: '/email-enhancer',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'LinkedIn Message',
-    disabled: true,
-    path: '/linkedin-message',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Instagram Caption',
-    disabled: true,
-    path: '/caption',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'FAQs Content',
-    disabled: true,
-    path: '/faq',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Product Name Generator',
-    disabled: true,
-    path: '/name-generator',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'SEO Keywords',
-    disabled: true,
-    path: '/seo-keywords',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Review Responder',
-    disabled: true,
-    path: '/review-responder',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Business Idea Generator',
-    disabled: true,
-    path: '/business-generator',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Article Generator',
-    disabled: true,
-    path: '/article',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
+    name: 'Analytics',
+    layout: '/admin',
+    path: '/analytics',
+    icon: <Icon as={MdAnalytics} width="20px" height="20px" color="inherit" />,
   },
 ];
 

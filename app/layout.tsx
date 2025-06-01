@@ -1,43 +1,36 @@
 'use client';
+
 import React, { ReactNode } from 'react';
-import type { AppProps } from 'next/app';
-import { ChakraProvider, Box, Portal, useDisclosure } from '@chakra-ui/react';
-import theme from '@/theme/theme';
-import routes from '@/routes';
-import Sidebar from '@/components/sidebar/Sidebar';
-import Footer from '@/components/footer/FooterAdmin';
-import Navbar from '@/components/navbar/NavbarAdmin';
-import { getActiveRoute, getActiveNavbar } from '@/utils/navigation';
+import { Box, Portal, useDisclosure } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+
 import '@/styles/App.css';
 import '@/styles/Contact.css';
 import '@/styles/Plugins.css';
 import '@/styles/MiniCalendar.css';
+import routes from '@/routes';
+
+import Sidebar from '@/components/sidebar/Sidebar';
+import Footer from '@/components/footer/FooterAdmin';
+import Navbar from '@/components/navbar/NavbarAdmin';
+import { getActiveRoute, getActiveNavbar } from '@/utils/navigation';
 import AppWrappers from './AppWrappers';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [apiKey, setApiKey] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
-  useEffect(() => {
-    const initialKey = localStorage.getItem('apiKey');
-    console.log(initialKey);
-    if (initialKey?.includes('sk-') && apiKey !== initialKey) {
-      setApiKey(initialKey);
-    }
-  }, [apiKey]);
+
+  const isAuthPage = pathname?.includes('register') || pathname?.includes('sign-in');
 
   return (
     <html lang="en">
-      <body id={'root'}>
+      <body id="root">
         <AppWrappers>
-          {/* <ChakraProvider theme={theme}> */}
-          {pathname?.includes('register') || pathname?.includes('sign-in') ? (
+          {isAuthPage ? (
             children
           ) : (
             <Box>
-              <Sidebar setApiKey={setApiKey} routes={routes} />
+              <Sidebar routes={routes} />
               <Box
                 pt={{ base: '60px', md: '100px' }}
                 float="right"
@@ -46,8 +39,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 overflow="auto"
                 position="relative"
                 maxHeight="100%"
-                w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
-                maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+                w={{ base: '100%', xl: 'calc(100% - 290px)' }}
+                maxWidth={{ base: '100%', xl: 'calc(100% - 290px)' }}
                 transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
                 transitionDuration=".2s, .2s, .35s"
                 transitionProperty="top, bottom, width"
@@ -56,11 +49,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <Portal>
                   <Box>
                     <Navbar
-                      setApiKey={setApiKey}
-                      onOpen={onOpen}
-                      logoText={'Horizon UI Dashboard PRO'}
-                      brandText={getActiveRoute(routes, pathname)}
-                      secondary={getActiveNavbar(routes, pathname)}
+                        onOpen={onOpen}
+                        logoText="Water Billing"
+                        brandText={getActiveRoute(routes, pathname)}
+                        secondary={getActiveNavbar(routes, pathname)} message={''} fixed={false}                 
                     />
                   </Box>
                 </Portal>
@@ -72,7 +64,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   pt="50px"
                 >
                   {children}
-                  {/* <Component apiKeyApp={apiKey} {...pageProps} /> */}
                 </Box>
                 <Box>
                   <Footer />
@@ -80,7 +71,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </Box>
             </Box>
           )}
-          {/* </ChakraProvider> */}
         </AppWrappers>
       </body>
     </html>

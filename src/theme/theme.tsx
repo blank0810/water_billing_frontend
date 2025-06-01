@@ -8,6 +8,7 @@ import { textareaStyles } from './components/textarea';
 import { switchStyles } from './components/switch';
 import { linkStyles } from './components/link';
 import { globalStyles } from './styles';
+import { sliderStyles } from './components/slider';
 
 export default extendTheme(
   globalStyles,
@@ -15,6 +16,7 @@ export default extendTheme(
   buttonStyles, // button styles
   linkStyles, // link styles
   progressStyles, // progress styles
+  sliderStyles, // slider styles
   inputStyles, // input styles
   textareaStyles, // textarea styles
   switchStyles, // switch styles

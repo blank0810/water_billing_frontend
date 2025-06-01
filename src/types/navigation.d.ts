@@ -1,16 +1,22 @@
-import { ComponentType, Element } from 'react';
+import { ComponentType, Element, ReactNode } from 'react';
 
 export interface IRoute {
   path: string;
   name: string;
   layout?: string;
   exact?: boolean;
-  component?: ComponentType;
-  icon?: ComponentType | string | Element;
+
+  component?: ComponentType<any>;
+  icon?: JSX.Element | ComponentType<any> | string | Element;
+
   secondary?: boolean;
   collapse?: boolean;
-  items?: IRoute[];
-  rightElement?: boolean;
-  invisible?: boolean;
   disabled?: boolean;
+  invisible?: boolean;
+
+  rightElement?: boolean;
+
+  // Sub-navigation
+  subRoutes?: IRoute[];
+  items?: IRoute[];
 }

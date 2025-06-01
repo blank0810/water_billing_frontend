@@ -1,12 +1,11 @@
 'use client';
-// Chakra Imports
+
 import {
   Box,
   Button,
   Center,
   Flex,
   Icon,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -14,38 +13,30 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { SearchBar } from '@/components/navbar/searchBar/SearchBar';
-import { SidebarResponsive } from '@/components/sidebar/Sidebar';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
-import { MdInfoOutline } from 'react-icons/md';
-import APIModal from '@/components/apiModal';
-import NavLink from '../link/NavLink';
+import { MdInfoOutline, MdNotificationsNone } from 'react-icons/md';
 import routes from '@/routes';
+import { useRouter } from 'next/navigation';
+import LogoutModal from '../modals/logoutModal';
+import { SidebarResponsive } from '../sidebar/Sidebar';
 
-export default function HeaderLinks(props: {
-  secondary: boolean;
-  setApiKey: any;
-}) {
-  const { secondary, setApiKey } = props;
+export default function HeaderLinks(props: { secondary: boolean, onOpen: any, fixed: any }) {
+  const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  // Chakra Color Mode
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const navbarIcon = useColorModeValue('gray.500', 'white');
-  let menuBg = useColorModeValue('white', 'navy.800');
+  const menuBg = useColorModeValue('white', 'navy.800');
   const textColor = useColorModeValue('navy.700', 'white');
   const borderColor = useColorModeValue('#E6ECFA', 'rgba(135, 140, 189, 0.3)');
+  const textColorBrand = useColorModeValue('brand.500', 'brand.400');
   const shadow = useColorModeValue(
     '14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
-    '0px 41px 75px #081132',
-  );
-  const buttonBg = useColorModeValue('transparent', 'navy.800');
-  const hoverButton = useColorModeValue(
-    { bg: 'gray.100' },
-    { bg: 'whiteAlpha.100' },
-  );
-  const activeButton = useColorModeValue(
-    { bg: 'gray.200' },
-    { bg: 'whiteAlpha.200' },
+    '0px 41px 75px #081132'
   );
 
   return (
@@ -61,18 +52,53 @@ export default function HeaderLinks(props: {
       boxShadow={shadow}
     >
       <SearchBar
-        mb={() => {
-          if (secondary) {
-            return { base: '10px', md: 'unset' };
-          }
-          return 'unset';
-        }}
+        mb={() => (secondary ? { base: '10px', md: 'unset' } : 'unset')}
         me="10px"
         borderRadius="30px"
       />
       <SidebarResponsive routes={routes} />
-      <APIModal setApiKey={setApiKey} />
 
+      {/* Notifications */}
+      <Menu>
+        <MenuButton p="0px">
+          <Icon
+            mt="6px"
+            as={MdNotificationsNone}
+            color={navbarIcon}
+            w="18px"
+            h="18px"
+            me="10px"
+          />
+        </MenuButton>
+        <MenuList
+          boxShadow={shadow}
+          p="20px"
+          borderRadius="20px"
+          bg={menuBg}
+          border="none"
+          mt="22px"
+          me={{ base: '30px', md: 'unset' }}
+          minW={{ base: 'unset', md: '400px', xl: '450px' }}
+          maxW={{ base: '360px', md: 'unset' }}
+        >
+          <Flex w="100%" mb="20px">
+            <Text fontSize="md" fontWeight="600" color={textColor}>
+              Notifications
+            </Text>
+            <Text
+              fontSize="sm"
+              fontWeight="500"
+              color={textColorBrand}
+              ms="auto"
+              cursor="pointer"
+            >
+              Mark all read
+            </Text>
+          </Flex>
+        </MenuList>
+      </Menu>
+
+      {/* Info */}
       <Menu>
         <MenuButton p="0px">
           <Icon
@@ -95,71 +121,11 @@ export default function HeaderLinks(props: {
           minW={{ base: 'unset' }}
           maxW={{ base: '360px', md: 'unset' }}
         >
-          {/* <Flex bgImage={navImage} borderRadius="16px" mb="28px" alt="" /> */}
-          <Flex flexDirection="column">
-            <Link
-              isExternal
-              w="100%"
-              href="https://horizon-ui.com/ai-template/"
-            >
-              <Button
-                variant="primary"
-                py="20px"
-                px="16px"
-                fontSize="sm"
-                borderRadius="45px"
-                mb="10px"
-                w="100%"
-                h="54px"
-              >
-                Buy Horizon AI Template
-              </Button>
-            </Link>
-            <Link
-              isExternal
-              w="100%"
-              href="https://horizon-ui.com/docs-ai-template/"
-            >
-              <Button
-                bg={buttonBg}
-                border="1px solid"
-                color={textColor}
-                mt={{ base: '20px', md: '0px' }}
-                borderColor={useColorModeValue('gray.200', 'whiteAlpha.100')}
-                fontSize="sm"
-                borderRadius="45px"
-                w="100%"
-                minW="44px"
-                h="44px"
-                _placeholder={{ color: 'gray.500' }}
-                _hover={hoverButton}
-                _active={activeButton}
-                _focus={activeButton}
-              >
-                See Documentation
-              </Button>
-            </Link>
-            <Link
-              w="100%"
-              isExternal
-              href="https://github.com/horizon-ui/chatgpt-ai-template"
-            >
-              <Button
-                w="100%"
-                h="44px"
-                variant="no-hover"
-                color={textColor}
-                fontSize="sm"
-                borderRadius="45px"
-                bg="transparent"
-              >
-                Try Free Version
-              </Button>
-            </Link>
-          </Flex>
+          <Flex flexDirection="column"></Flex>
         </MenuList>
       </Menu>
 
+      {/* Theme Toggle */}
       <Button
         variant="no-hover"
         bg="transparent"
@@ -178,6 +144,8 @@ export default function HeaderLinks(props: {
           as={colorMode === 'light' ? IoMdMoon : IoMdSunny}
         />
       </Button>
+
+      {/* User Menu */}
       <Menu>
         <MenuButton p="0px" style={{ position: 'relative' }}>
           <Box
@@ -186,11 +154,11 @@ export default function HeaderLinks(props: {
             bg="#11047A"
             w="40px"
             h="40px"
-            borderRadius={'50%'}
+            borderRadius="50%"
           />
-          <Center top={0} left={0} position={'absolute'} w={'100%'} h={'100%'}>
-            <Text fontSize={'xs'} fontWeight="bold" color={'white'}>
-              AP
+          <Center top={0} left={0} position="absolute" w="100%" h="100%">
+            <Text fontSize="xs" fontWeight="bold" color="white">
+              EJK
             </Text>
           </Center>
         </MenuButton>
@@ -214,33 +182,15 @@ export default function HeaderLinks(props: {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, Adela
+              👋&nbsp; Hey, Enan and JanTan
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">
-            <NavLink href="/settings">
-              <MenuItem
-                _hover={{ bg: 'none' }}
-                _focus={{ bg: 'none' }}
-                color={textColor}
-                borderRadius="8px"
-                px="14px"
-              >
-                <Text fontWeight="500" fontSize="sm">
-                  Profile Settings
-                </Text>
-              </MenuItem>
-            </NavLink>
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              color={textColor}
-              borderRadius="8px"
-              px="14px"
-            >
-              <Text fontWeight="500" fontSize="sm">
-                Newsletter Settings
-              </Text>
+            <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+              <Text fontSize="sm">Profile Settings</Text>
+            </MenuItem>
+            <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+              <Text fontSize="sm">Consumer</Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: 'none' }}
@@ -248,14 +198,16 @@ export default function HeaderLinks(props: {
               color="red.400"
               borderRadius="8px"
               px="14px"
+              onClick={onOpen}
             >
-              <Text fontWeight="500" fontSize="sm">
-                Log out
-              </Text>
+              <Text fontSize="sm">Log out</Text>
             </MenuItem>
           </Flex>
         </MenuList>
       </Menu>
+
+      {/* Logout Modal */}
+      <LogoutModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 }
