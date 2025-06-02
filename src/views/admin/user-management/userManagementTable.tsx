@@ -72,11 +72,11 @@ export default function UserManagementTable(props: { tableData: RowObj[] }) {
     onOpen();
   };
 
-const handleUserSave = async (updatedUser: RowObj): Promise<void> => {
-  setUpdatedUser(updatedUser);
-  setIsUpdateModalOpen(true);
-  onClose(); 
-};
+  const handleUserSave = async (updatedUser: RowObj): Promise<void> => {
+    setUpdatedUser(updatedUser);
+    setIsUpdateModalOpen(true);
+    onClose();
+  };
 
 
 
@@ -112,8 +112,8 @@ const handleUserSave = async (updatedUser: RowObj): Promise<void> => {
     setUserToView(null);
   };
 
-const [updatedUser, setUpdatedUser] = React.useState<RowObj | null>(null);
-const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
+  const [updatedUser, setUpdatedUser] = React.useState<RowObj | null>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
 
 
 
@@ -505,9 +505,10 @@ const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
       <EditUserDrawer
         isOpen={isOpen}
         onClose={onClose}
-        userData={selectedUser}
+        user={selectedUser}
         onSave={handleUserSave}
       />
+
 
       <ViewUserModal
         isOpen={isViewOpen}
@@ -522,16 +523,16 @@ const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
         onDelete={handleDeleteUser}
       />
 
-     
-{isUpdateModalOpen && updatedUser && (
-  <UpdateUserModal
-    isOpen={isUpdateModalOpen}
-    onClose={closeUpdateConfirmModal}
-    onConfirm={() => handleUserSave(updatedUser)}
-    updatedUser={updatedUser}
-    isPasswordChanged={false} // or based on form logic
-  />
-)}
+
+      {isUpdateModalOpen && updatedUser && (
+        <UpdateUserModal
+          isOpen={isUpdateModalOpen}
+          onClose={closeUpdateConfirmModal}
+          onConfirm={() => handleUserSave(updatedUser)}
+          updatedUser={updatedUser}
+          isPasswordChanged={false} // or based on form logic
+        />
+      )}
     </>
   );
 }

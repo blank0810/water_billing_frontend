@@ -22,11 +22,15 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
+interface RowObj {
+    [key: string]: any;
+}
+
 interface EditUserDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    userData: any; // Replace with a better type if available
-    onSave: (updatedUser: any) => void;
+    user: RowObj | null;
+    onSave: (updatedUser: RowObj) => void | Promise<void>;
 }
 
 type PasswordField = 'oldPassword' | 'newPassword' | 'confirmPassword';
@@ -34,10 +38,10 @@ type PasswordField = 'oldPassword' | 'newPassword' | 'confirmPassword';
 export default function EditUserDrawer({
     isOpen,
     onClose,
-    userData,
+    user,
     onSave,
 }: EditUserDrawerProps) {
-    const [formData, setFormData] = useState(userData);
+    const [formData, setFormData] = useState<RowObj | null>(user);
     const [showSecurityForm, setShowSecurityForm] = useState(false);
     const [passwordVisibility, setPasswordVisibility] = useState<Record<PasswordField, boolean>>({
         oldPassword: false,
@@ -46,19 +50,22 @@ export default function EditUserDrawer({
     });
 
     useEffect(() => {
-        setFormData(userData);
+        setFormData(user);
         setShowSecurityForm(false);
-    }, [userData]);
+    }, [user]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
+        if (!formData) return;
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSave = () => {
-        onSave(formData);
-        onClose();
+        if (formData) {
+            onSave(formData);
+            onClose();
+        }
     };
 
     const bg = useColorModeValue('white', 'gray.800');
@@ -66,6 +73,20 @@ export default function EditUserDrawer({
     const inputBg = useColorModeValue('gray.50', 'gray.700');
     const inputBorder = useColorModeValue('gray.200', 'gray.600');
     const linkColor = useColorModeValue('blue.600', 'blue.300');
+
+    const profileFields = [
+        { label: 'First Name', name: 'firstName' },
+        { label: 'Last Name', name: 'lastName' },
+        { label: 'Username', name: 'username' },
+        { label: 'Contact Number', name: 'contactNumber' },
+        { label: 'Address', name: 'address' },
+    ];
+
+    const passwordFields: { label: string; name: PasswordField }[] = [
+        { label: 'Old Password', name: 'oldPassword' },
+        { label: 'New Password', name: 'newPassword' },
+        { label: 'Confirm Password', name: 'confirmPassword' },
+    ];
 
     return (
         <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="md">
@@ -81,18 +102,12 @@ export default function EditUserDrawer({
                         <>
                             {!showSecurityForm ? (
                                 <>
-                                    {[
-                                        { label: 'First Name', name: 'firstName' },
-                                        { label: 'Last Name', name: 'lastName' },
-                                        { label: 'Username', name: 'username' },
-                                        { label: 'Contact Number', name: 'contactNumber' },
-                                        { label: 'Address', name: 'address' },
-                                    ].map((field) => (
-                                        <FormControl mb={4} key={field.name}>
-                                            <FormLabel color={labelColor}>{field.label}</FormLabel>
+                                    {profileFields.map(({ label, name }) => (
+                                        <FormControl mb={4} key={name}>
+                                            <FormLabel color={labelColor}>{label}</FormLabel>
                                             <Input
-                                                name={field.name}
-                                                value={formData[field.name] || ''}
+                                                name={name}
+                                                value={formData[name] || ''}
                                                 onChange={handleChange}
                                                 bg={inputBg}
                                                 borderColor={inputBorder}
@@ -153,11 +168,9 @@ export default function EditUserDrawer({
                                             bg={inputBg}
                                             borderColor={inputBorder}
                                         />
-                                    {([
-                                        { label: 'Old Password', name: 'oldPassword' },
-                                        { label: 'New Password', name: 'newPassword' },
-                                        { label: 'Confirm Password', name: 'confirmPassword' },
-                                    ] as { label: string; name: PasswordField }[]).map(({ label, name }) => (
+                                    </FormControl>
+
+                                    {passwordFields.map(({ label, name }) => (
                                         <FormControl mb={4} key={name}>
                                             <FormLabel color={labelColor}>{label}</FormLabel>
                                             <InputGroup>
@@ -180,13 +193,12 @@ export default function EditUserDrawer({
                                                         }
                                                         variant="ghost"
                                                     >
-                                                        {passwordVisibility[name] ? '🙈' : '👁️'}
+                                                        {passwordVisibility[name] ? '🙈' : '👁'}
                                                     </Button>
                                                 </InputRightElement>
                                             </InputGroup>
                                         </FormControl>
                                     ))}
-                                        </FormControl>
                                 </>
                             )}
 
@@ -194,6 +206,7 @@ export default function EditUserDrawer({
                                 <Link
                                     color={linkColor}
                                     fontSize="sm"
+                                    cursor="pointer"
                                     onClick={() => setShowSecurityForm((prev) => !prev)}
                                 >
                                     {showSecurityForm
